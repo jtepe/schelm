@@ -1,4 +1,4 @@
-```meraid
+```mermaid
 graph TB
     subgraph Enums["Enums"]
         DetailEnum["DetailEnum<br/>(Auto, High, Low)"]
