@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use serde_with::skip_serializing_none;
 use std::collections::HashMap;
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
@@ -142,9 +143,10 @@ pub enum ServiceTierEnum {
 
 /// An internal identifier for an item to reference.
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
+#[skip_serializing_none]
 pub struct ItemReferenceParam {
     /// The type of item to reference. Always `item_reference`.
-    #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "type")]
     pub ty: Option<String>,
     /// The ID of the item to reference.
     pub id: String,
@@ -160,19 +162,17 @@ pub struct ReasoningSummaryContentParam {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
+#[skip_serializing_none]
 pub struct ReasoningItemParam {
     /// The unique ID of this reasoning item.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
     /// The item type. Always `reasoning`.
     #[serde(rename = "type")]
     pub ty: String,
     /// Reasoning summary content associated with this item.
     pub summary: Vec<ReasoningSummaryContentParam>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub content: Option<serde_json::Value>,
     /// An encrypted representation of the reasoning content.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub encrypted_content: Option<String>,
 }
 
@@ -188,32 +188,29 @@ pub struct InputTextContentParam {
 
 /// An image input to the model. Learn about [image inputs](/docs/guides/vision)
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
+#[skip_serializing_none]
 pub struct InputImageContentParamAutoParam {
     /// The type of the input item. Always `input_image`.
     #[serde(rename = "type")]
     pub ty: String,
     /// The URL of the image to be sent to the model. A fully qualified URL or base64 encoded image in a data URL.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub image_url: Option<String>,
     /// The detail level of the image to be sent to the model. One of `high`, `low`, or `auto`. Defaults to `auto`.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub detail: Option<ImageDetail>,
 }
 
 /// A file input to the model.
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
+#[skip_serializing_none]
 pub struct InputFileContentParam {
     /// The type of the input item. Always `input_file`.
     #[serde(rename = "type")]
     pub ty: String,
     /// The name of the file to be sent to the model.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub filename: Option<String>,
     /// The base64-encoded data of the file to be sent to the model.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub file_data: Option<String>,
     /// The URL of the file to be sent to the model.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub file_url: Option<String>,
 }
 
@@ -235,9 +232,9 @@ pub enum UserMessageContent {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
+#[skip_serializing_none]
 pub struct UserMessageItemParam {
     /// The unique ID of this message item.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
     /// The item type. Always `message`.
     #[serde(rename = "type")]
@@ -247,7 +244,6 @@ pub struct UserMessageItemParam {
     /// The message content, as an array of content parts.
     pub content: UserMessageContent,
     /// The status of the message item.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }
 
@@ -260,9 +256,9 @@ pub enum SystemMessageContent {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
+#[skip_serializing_none]
 pub struct SystemMessageItemParam {
     /// The unique ID of this message item.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
     /// The item type. Always `message`.
     #[serde(rename = "type")]
@@ -272,14 +268,13 @@ pub struct SystemMessageItemParam {
     /// The message content, as an array of content parts.
     pub content: SystemMessageContent,
     /// The status of the message item.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
+#[skip_serializing_none]
 pub struct DeveloperMessageItemParam {
     /// The unique ID of this message item.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
     /// The item type. Always `message`.
     #[serde(rename = "type")]
@@ -289,7 +284,6 @@ pub struct DeveloperMessageItemParam {
     /// The message content, as an array of content parts.
     pub content: SystemMessageContent,
     /// The status of the message item.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }
 
@@ -309,6 +303,7 @@ pub struct UrlCitationParam {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
+#[skip_serializing_none]
 pub struct OutputTextContentParam {
     /// The content type. Always `output_text`.
     #[serde(rename = "type")]
@@ -316,7 +311,6 @@ pub struct OutputTextContentParam {
     /// The text content.
     pub text: String,
     /// Citations associated with the text content.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub annotations: Option<Vec<UrlCitationParam>>,
 }
 
@@ -346,9 +340,9 @@ pub enum AssistantMessageContent {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
+#[skip_serializing_none]
 pub struct AssistantMessageItemParam {
     /// The unique ID of this message item.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
     /// The item type. Always `message`.
     #[serde(rename = "type")]
@@ -358,14 +352,13 @@ pub struct AssistantMessageItemParam {
     /// The message content, as an array of content parts.
     pub content: AssistantMessageContent,
     /// The status of the message item.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
+#[skip_serializing_none]
 pub struct FunctionCallItemParam {
     /// The unique ID of this function tool call.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
     /// The unique ID of the function tool call generated by the model.
     pub call_id: String,
@@ -377,7 +370,6 @@ pub struct FunctionCallItemParam {
     /// The function arguments as a JSON string.
     pub arguments: String,
     /// The status of the function tool call.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<FunctionCallStatus>,
 }
 
@@ -411,9 +403,9 @@ pub enum FunctionCallOutput {
 
 /// The output of a function tool call.
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
+#[skip_serializing_none]
 pub struct FunctionCallOutputItemParam {
     /// The unique ID of the function tool call output. Populated when this item is returned via API.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
     /// The unique ID of the function tool call generated by the model.
     pub call_id: String,
@@ -423,7 +415,6 @@ pub struct FunctionCallOutputItemParam {
     /// Text, image, or file output of the function tool call.
     pub output: FunctionCallOutput,
     /// The status of the item. One of `in_progress`, `completed`, or `incomplete`. Populated when items are returned via API.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<FunctionCallStatus>,
 }
 
@@ -481,6 +472,7 @@ pub enum SpecificToolChoiceParam {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
+#[skip_serializing_none]
 pub struct AllowedToolsParam {
     /// The tool choice type. Always `allowed_tools`.
     #[serde(rename = "type")]
@@ -488,7 +480,6 @@ pub struct AllowedToolsParam {
     /// The list of tools that are permitted for this request.
     pub tools: Vec<SpecificToolChoiceParam>,
     /// How to select a tool from the allowed set.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub mode: Option<ToolChoiceValueEnum>,
 }
 
@@ -505,112 +496,85 @@ pub enum ToolChoiceParam {
 pub type MetadataParam = HashMap<String, String>;
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
+#[skip_serializing_none]
 pub struct TextParam {
     /// The format configuration for text output.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub format: Option<serde_json::Value>,
     /// Controls the level of detail in generated text output.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub verbosity: Option<VerbosityEnum>,
 }
 
 /// Options that control streamed response behavior.
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
+#[skip_serializing_none]
 pub struct StreamOptionsParam {
     /// Whether to obfuscate sensitive information in streamed output. Defaults to `true`.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub include_obfuscation: Option<bool>,
 }
 
 /// **gpt-5 and o-series models only** Configuration options for [reasoning models](https://platform.openai.com/docs/guides/reasoning).
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
+#[skip_serializing_none]
 pub struct ReasoningParam {
     /// Controls the level of reasoning effort the model should apply. Higher effort may increase latency and cost.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub effort: Option<ReasoningEffortEnum>,
     /// Controls whether the response includes a reasoning summary.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub summary: Option<ReasoningSummaryEnum>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
+#[skip_serializing_none]
 pub struct CreateResponseBody {
     /// The model to use for this request, e.g. 'gpt-5.2'.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub model: Option<String>,
     /// Context to provide to the model for the scope of this request. May either be a string or an array of input items. If a string is provided, it is interpreted as a user message.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub input: Option<CreateResponseInput>,
     /// The ID of the response to use as the prior turn for this request.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub previous_response_id: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub include: Option<Vec<IncludeEnum>>,
     /// A list of tools that the model may call while generating the response.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub tools: Option<Vec<ResponsesToolParam>>,
     /// Controls which tool the model should use, if any.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub tool_choice: Option<ToolChoiceParam>,
     /// Set of 16 key-value pairs that can be attached to an object.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub metadata: Option<MetadataParam>,
     /// Configuration options for text output.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub text: Option<TextParam>,
     /// Sampling temperature to use, between 0 and 2. Higher values make the output more random.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub temperature: Option<f64>,
     /// Nucleus sampling parameter, between 0 and 1. The model considers only the tokens with the top cumulative probability.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub top_p: Option<f64>,
     /// Penalizes new tokens based on whether they appear in the text so far.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub presence_penalty: Option<f64>,
     /// Penalizes new tokens based on their frequency in the text so far.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub frequency_penalty: Option<f64>,
     /// Whether the model may call multiple tools in parallel.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub parallel_tool_calls: Option<bool>,
     /// Whether to stream response events as server-sent events.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub stream: Option<bool>,
     /// Options that control streamed response behavior.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub stream_options: Option<StreamOptionsParam>,
     /// Whether to run the request in the background and return immediately.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub background: Option<bool>,
     /// The maximum number of tokens the model may generate for this response.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub max_output_tokens: Option<i32>,
     /// The maximum number of tool calls the model may make while generating the response.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub max_tool_calls: Option<i32>,
     /// Configuration options for reasoning behavior.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub reasoning: Option<ReasoningParam>,
     /// A stable identifier used for safety monitoring and abuse detection.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub safety_identifier: Option<String>,
     /// A key to use when reading from or writing to the prompt cache.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub prompt_cache_key: Option<String>,
     /// Controls how the service truncates the input when it exceeds the model context window.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub truncation: Option<TruncationEnum>,
     /// Additional instructions to guide the model for this request.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub instructions: Option<String>,
     /// Whether to store the response so it can be retrieved later.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub store: Option<bool>,
     /// The service tier to use for this request.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub service_tier: Option<ServiceTierEnum>,
     /// The number of most likely tokens to return at each position, along with their log probabilities.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub top_logprobs: Option<i32>,
 }
 
