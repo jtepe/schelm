@@ -104,3 +104,34 @@ impl<'a> CreateResponseRequestBuilder<'a> {
         Ok(resp.json::<models::ResponseResource>().await?)
     }
 }
+
+#[cfg(all(test, feature = "client"))]
+mod tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn send_errors_if_stream_is_true() {
+        let http = reqwest::Client::builder().build().unwrap();
+
+        // Construct a Client without hitting the network: send() should bail out before using `http`.
+        let client = Client {
+            base_url: url::Url::parse("https://example.com/v1").unwrap(),
+            http,
+        };
+
+        let req = Responses::new(&client)
+            .create("gpt-test", models::CreateResponseInput::String("hi".into()));
+
+        // We don't expose a stream setter, but we still want to guard against stream=true.
+        let req = CreateResponseRequestBuilder {
+            client: req.client,
+            body: models::CreateResponseBody {
+                stream: Some(true),
+                ..req.body
+            },
+        };
+
+        let err = req.send().await.unwrap_err();
+        assert!(matches!(err, Error::StreamingNotSupported));
+    }
+}
