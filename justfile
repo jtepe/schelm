@@ -1,15 +1,23 @@
 # run all checks, formatting, linting, etc.
 check: fmt lint
-    cargo check
+    @cargo check --features client
 
 # debug build of the library
 build-debug:
-    cargo build --debug
+    @cargo build --debug --features client
 
 # format code
 fmt:
-    cargo fmt
+    @cargo fmt
 
 # run clippy lints
 lint:
-    cargo clippy
+    @cargo clippy
+
+# clean artifacts
+clean:
+    @cargo clean
+
+# run all test cases
+test:
+    @cargo test -q --features client
