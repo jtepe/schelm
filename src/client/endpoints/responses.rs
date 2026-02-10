@@ -37,7 +37,7 @@ impl<'a> Responses<'a> {
                 presence_penalty: None,
                 frequency_penalty: None,
                 parallel_tool_calls: None,
-                stream: None,
+                stream: Some(false),
                 stream_options: None,
                 background: None,
                 max_output_tokens: None,
@@ -47,7 +47,7 @@ impl<'a> Responses<'a> {
                 prompt_cache_key: None,
                 truncation: None,
                 instructions: None,
-                store: None,
+                store: Some(false),
                 service_tier: None,
                 top_logprobs: None,
             },
@@ -84,6 +84,51 @@ impl<'a> CreateResponseRequestBuilder<'a> {
 
     pub fn max_output_tokens(mut self, max_output_tokens: i32) -> Self {
         self.body.max_output_tokens = Some(max_output_tokens);
+        self
+    }
+
+    pub fn tools(mut self, tools: Vec<models::ResponsesToolParam>) -> Self {
+        self.body.tools = Some(tools);
+        self
+    }
+
+    pub fn tool_choice(mut self, tool_choice: models::ToolChoiceParam) -> Self {
+        self.body.tool_choice = Some(tool_choice);
+        self
+    }
+
+    pub fn text(mut self, text: models::TextParam) -> Self {
+        self.body.text = Some(text);
+        self
+    }
+
+    pub fn store(mut self, store: bool) -> Self {
+        self.body.store = Some(store);
+        self
+    }
+
+    pub fn service_tier(mut self, service_tier: models::ServiceTierEnum) -> Self {
+        self.body.service_tier = Some(service_tier);
+        self
+    }
+
+    pub fn top_p(mut self, top_p: f64) -> Self {
+        self.body.top_p = Some(top_p);
+        self
+    }
+
+    pub fn truncation(mut self, truncation: models::TruncationEnum) -> Self {
+        self.body.truncation = Some(truncation);
+        self
+    }
+
+    pub fn reasoning(mut self, reasoning: models::ReasoningParam) -> Self {
+        self.body.reasoning = Some(reasoning);
+        self
+    }
+
+    pub fn previous_response_id(mut self, id: impl Into<String>) -> Self {
+        self.body.previous_response_id = Some(id.into());
         self
     }
 
