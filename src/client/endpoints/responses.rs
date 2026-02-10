@@ -102,11 +102,6 @@ impl<'a> CreateResponseRequestBuilder<'a> {
         self
     }
 
-    pub fn store(mut self, store: bool) -> Self {
-        self.body.store = Some(store);
-        self
-    }
-
     pub fn service_tier(mut self, service_tier: models::ServiceTierEnum) -> Self {
         self.body.service_tier = Some(service_tier);
         self
