@@ -1,6 +1,6 @@
 # run all checks, formatting, linting, etc.
 check: fmt lint
-    @cargo check --features client
+    @cargo check --features client -q
 
 # debug build of the library
 build-debug:

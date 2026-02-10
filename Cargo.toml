@@ -1,7 +1,8 @@
 [package]
-name = "responses"
+name = "ores"
 version = "0.1.0"
 edition = "2024"
+description = "OpenResponses Rust SDK"
 
 [features]
 default = []
