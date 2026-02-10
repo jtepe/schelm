@@ -142,8 +142,8 @@ pub enum ServiceTierEnum {
 }
 
 /// An internal identifier for an item to reference.
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 #[skip_serializing_none]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct ItemReferenceParam {
     /// The type of item to reference. Always `item_reference`.
     #[serde(rename = "type")]
@@ -161,8 +161,8 @@ pub struct ReasoningSummaryContentParam {
     pub text: String,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 #[skip_serializing_none]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct ReasoningItemParam {
     /// The unique ID of this reasoning item.
     pub id: Option<String>,
@@ -187,8 +187,8 @@ pub struct InputTextContentParam {
 }
 
 /// An image input to the model. Learn about [image inputs](/docs/guides/vision)
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 #[skip_serializing_none]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct InputImageContentParamAutoParam {
     /// The type of the input item. Always `input_image`.
     #[serde(rename = "type")]
@@ -200,8 +200,8 @@ pub struct InputImageContentParamAutoParam {
 }
 
 /// A file input to the model.
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 #[skip_serializing_none]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct InputFileContentParam {
     /// The type of the input item. Always `input_file`.
     #[serde(rename = "type")]
@@ -231,8 +231,8 @@ pub enum UserMessageContent {
     String(String),
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 #[skip_serializing_none]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct UserMessageItemParam {
     /// The unique ID of this message item.
     pub id: Option<String>,
@@ -255,8 +255,8 @@ pub enum SystemMessageContent {
     String(String),
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 #[skip_serializing_none]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct SystemMessageItemParam {
     /// The unique ID of this message item.
     pub id: Option<String>,
@@ -271,8 +271,8 @@ pub struct SystemMessageItemParam {
     pub status: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 #[skip_serializing_none]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct DeveloperMessageItemParam {
     /// The unique ID of this message item.
     pub id: Option<String>,
@@ -302,8 +302,8 @@ pub struct UrlCitationParam {
     pub title: String,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 #[skip_serializing_none]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct OutputTextContentParam {
     /// The content type. Always `output_text`.
     #[serde(rename = "type")]
@@ -339,8 +339,8 @@ pub enum AssistantMessageContent {
     String(String),
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 #[skip_serializing_none]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct AssistantMessageItemParam {
     /// The unique ID of this message item.
     pub id: Option<String>,
@@ -355,8 +355,8 @@ pub struct AssistantMessageItemParam {
     pub status: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 #[skip_serializing_none]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct FunctionCallItemParam {
     /// The unique ID of this function tool call.
     pub id: Option<String>,
@@ -402,8 +402,8 @@ pub enum FunctionCallOutput {
 }
 
 /// The output of a function tool call.
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 #[skip_serializing_none]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct FunctionCallOutputItemParam {
     /// The unique ID of the function tool call output. Populated when this item is returned via API.
     pub id: Option<String>,
@@ -440,6 +440,7 @@ pub enum MessageItemParam {
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct EmptyModelParam {}
 
+#[skip_serializing_none]
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct FunctionToolParam {
     pub name: String,
@@ -471,8 +472,8 @@ pub enum SpecificToolChoiceParam {
     SpecificFunction(SpecificFunctionParam),
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 #[skip_serializing_none]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct AllowedToolsParam {
     /// The tool choice type. Always `allowed_tools`.
     #[serde(rename = "type")]
@@ -495,8 +496,8 @@ pub enum ToolChoiceParam {
 /// Set of 16 key-value pairs that can be attached to an object.
 pub type MetadataParam = HashMap<String, String>;
 
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 #[skip_serializing_none]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct TextParam {
     /// The format configuration for text output.
     pub format: Option<serde_json::Value>,
@@ -505,16 +506,16 @@ pub struct TextParam {
 }
 
 /// Options that control streamed response behavior.
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 #[skip_serializing_none]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct StreamOptionsParam {
     /// Whether to obfuscate sensitive information in streamed output. Defaults to `true`.
     pub include_obfuscation: Option<bool>,
 }
 
 /// **gpt-5 and o-series models only** Configuration options for [reasoning models](https://platform.openai.com/docs/guides/reasoning).
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 #[skip_serializing_none]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct ReasoningParam {
     /// Controls the level of reasoning effort the model should apply. Higher effort may increase latency and cost.
     pub effort: Option<ReasoningEffortEnum>,
@@ -522,8 +523,8 @@ pub struct ReasoningParam {
     pub summary: Option<ReasoningSummaryEnum>,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 #[skip_serializing_none]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct CreateResponseBody {
     /// The model to use for this request, e.g. 'gpt-5.2'.
     pub model: Option<String>,
@@ -1095,6 +1096,50 @@ pub enum StreamingEvent {
         /// The error payload that was emitted.
         error: ErrorPayload,
     },
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_skip_serializing_none() {
+        let body = CreateResponseBody {
+            model: Some("test".into()),
+            input: Some(CreateResponseInput::String("hi".into())),
+            previous_response_id: None,
+            include: None,
+            tools: None,
+            tool_choice: None,
+            metadata: None,
+            text: None,
+            temperature: None,
+            top_p: None,
+            presence_penalty: None,
+            frequency_penalty: None,
+            parallel_tool_calls: None,
+            stream: None,
+            stream_options: None,
+            background: None,
+            max_output_tokens: None,
+            max_tool_calls: None,
+            reasoning: None,
+            safety_identifier: None,
+            prompt_cache_key: None,
+            truncation: None,
+            instructions: None,
+            store: None,
+            service_tier: None,
+            top_logprobs: None,
+        };
+        let json = serde_json::to_string_pretty(&body).unwrap();
+        println!("SERIALIZED JSON:\n{}", json);
+        // None fields must NOT appear in the JSON
+        assert!(!json.contains("\"tools\""), "tools should be omitted when None");
+        assert!(!json.contains("\"stream\""), "stream should be omitted when None");
+        assert!(!json.contains("\"store\""), "store should be omitted when None");
+        assert!(!json.contains("\"text\""), "text should be omitted when None");
+    }
 }
 
 /// An error payload that was emitted for a streaming error event.
