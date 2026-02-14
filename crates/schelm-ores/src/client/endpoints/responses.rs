@@ -1,6 +1,7 @@
-use crate::{client::http, models};
+use crate::client::{http, sse};
+use crate::models;
 
-use crate::client::{Client, Error, Result};
+use crate::client::{Client, Result};
 
 /// Responses endpoint group.
 #[derive(Clone, Copy, Debug)]
@@ -129,10 +130,6 @@ impl<'a> CreateResponseRequestBuilder<'a> {
 
     /// Sends the request and returns the full response resource.
     pub async fn send(self) -> Result<models::ResponseResource> {
-        if self.body.stream == Some(true) {
-            return Err(Error::StreamingNotSupported);
-        }
-
         let url = self.client.endpoint_url("responses")?;
 
         let resp = self.client.http().post(url).json(&self.body).send().await?;
@@ -143,35 +140,30 @@ impl<'a> CreateResponseRequestBuilder<'a> {
 
         Ok(resp.json::<models::ResponseResource>().await?)
     }
-}
 
-#[cfg(all(test, feature = "client"))]
-mod tests {
-    use super::*;
+    /// Sends the request with streaming enabled and returns a stream of events.
+    ///
+    /// This force-sets `stream=true` on the request body. The returned
+    /// [`ResponseEventStream`](crate::client::ResponseEventStream) yields
+    /// `Result<StreamingEvent>` items decoded from the SSE response.
+    pub async fn send_stream(mut self) -> Result<sse::ResponseEventStream> {
+        self.body.stream = Some(true);
 
-    #[tokio::test]
-    async fn send_errors_if_stream_is_true() {
-        let http = reqwest::Client::builder().build().unwrap();
+        let url = self.client.endpoint_url("responses")?;
 
-        // Construct a Client without hitting the network: send() should bail out before using `http`.
-        let client = Client {
-            base_url: url::Url::parse("https://example.com/v1").unwrap(),
-            http,
-        };
+        let resp = self
+            .client
+            .http()
+            .post(url)
+            .header(reqwest::header::ACCEPT, "text/event-stream")
+            .json(&self.body)
+            .send()
+            .await?;
 
-        let req = Responses::new(&client)
-            .create("gpt-test", models::CreateResponseInput::String("hi".into()));
+        if !resp.status().is_success() {
+            return Err(http::read_error_body(resp).await?);
+        }
 
-        // We don't expose a stream setter, but we still want to guard against stream=true.
-        let req = CreateResponseRequestBuilder {
-            client: req.client,
-            body: models::CreateResponseBody {
-                stream: Some(true),
-                ..req.body
-            },
-        };
-
-        let err = req.send().await.unwrap_err();
-        assert!(matches!(err, Error::StreamingNotSupported));
+        sse::ResponseEventStream::from_response(resp)
     }
 }
