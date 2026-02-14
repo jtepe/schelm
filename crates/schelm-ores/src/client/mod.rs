@@ -7,9 +7,11 @@ pub mod endpoints;
 mod builder;
 mod error;
 mod http;
+pub(crate) mod sse;
 
 pub use builder::ClientBuilder;
-pub use error::{Error, Result};
+pub use error::{Error, Result, StreamingError};
+pub use sse::ResponseEventStream;
 
 /// Reqwest-based API client.
 #[derive(Clone, Debug)]
