@@ -1,25 +1,11 @@
-[package]
-name = "ores"
-version = "0.1.0"
+[workspace]
+name = "schelm"
+resolver = "3"
+members = ["crates/*"]
+
+[workspace.package]
 edition = "2024"
-description = "OpenResponses Rust SDK"
+license = "Apache 2.0"
+version = "0.1.0"
 
-[features]
-default = []
-# Enables the HTTP client implementation (reqwest-based).
-client = ["dep:reqwest", "dep:url", "dep:thiserror"]
 
-[dependencies]
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-serde_with = { version = "3", features = ["macros"] }
-
-# Optional HTTP client dependencies
-reqwest = { version = "0.13.1", default-features = false, features = ["json", "rustls"], optional = true }
-url = { version = "2", optional = true }
-thiserror = { version = "2", optional = true }
-
-[dev-dependencies]
-# Used for async unit tests of the client module.
-tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
-wiremock = "0.6"

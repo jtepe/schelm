@@ -1,5 +1,5 @@
 # Project Description
-[OpenResponses](https://www.openresponses.org/) Rust SDK.
+schelm-ores : [OpenResponses](https://www.openresponses.org/) Rust SDK.
 
 ## Layout
 * [Types](./src/models/mod.rs) : Rust representation of types defined by OpenResponses

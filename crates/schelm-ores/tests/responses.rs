@@ -123,7 +123,7 @@ async fn returns_http_status_error_on_401() {
         .expect_err("should return an error for 401");
 
     match err {
-        ores::client::Error::HttpStatus { status, body } => {
+        schelm_ores::client::Error::HttpStatus { status, body } => {
             assert_eq!(status.as_u16(), 401);
             assert!(body.contains("invalid_api_key"), "body was: {body}");
         }
@@ -158,7 +158,7 @@ async fn returns_http_status_error_on_400() {
         .expect_err("should return an error for 400");
 
     match err {
-        ores::client::Error::HttpStatus { status, body } => {
+        schelm_ores::client::Error::HttpStatus { status, body } => {
             assert_eq!(status.as_u16(), 400);
             assert!(body.contains("invalid_request"), "body was: {body}");
         }
@@ -193,7 +193,7 @@ async fn returns_http_status_error_on_500() {
         .expect_err("should return an error for 500");
 
     match err {
-        ores::client::Error::HttpStatus { status, body } => {
+        schelm_ores::client::Error::HttpStatus { status, body } => {
             assert_eq!(status.as_u16(), 500);
             assert!(body.contains("server_error"), "body was: {body}");
         }
@@ -228,7 +228,7 @@ async fn returns_http_status_error_on_429_rate_limit() {
         .expect_err("should return an error for 429");
 
     match err {
-        ores::client::Error::HttpStatus { status, body } => {
+        schelm_ores::client::Error::HttpStatus { status, body } => {
             assert_eq!(status.as_u16(), 429);
             assert!(body.contains("rate_limit_exceeded"), "body was: {body}");
         }
@@ -257,7 +257,7 @@ async fn returns_error_on_invalid_json_response() {
 
     // reqwest surfaces deserialization failures as its own error type
     assert!(
-        matches!(err, ores::client::Error::Reqwest(_)),
+        matches!(err, schelm_ores::client::Error::Reqwest(_)),
         "expected Reqwest error, got: {err:?}"
     );
 }
@@ -282,7 +282,7 @@ async fn returns_http_status_error_with_empty_body() {
         .expect_err("should return an error for 502");
 
     match err {
-        ores::client::Error::HttpStatus { status, body } => {
+        schelm_ores::client::Error::HttpStatus { status, body } => {
             assert_eq!(status.as_u16(), 502);
             assert!(body.is_empty(), "expected empty body, got: {body}");
         }
@@ -306,7 +306,7 @@ async fn unmatched_request_returns_error() {
         .expect_err("should return an error when no mock matches");
 
     match err {
-        ores::client::Error::HttpStatus { status, .. } => {
+        schelm_ores::client::Error::HttpStatus { status, .. } => {
             assert_eq!(status.as_u16(), 404);
         }
         other => panic!("expected HttpStatus error, got: {other:?}"),
