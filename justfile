@@ -2,10 +2,6 @@
 check: fmt lint
     @cargo check --features client -q
 
-# debug build of the library
-build-debug:
-    @cargo build --debug --features client
-
 # format code
 fmt:
     @cargo fmt
