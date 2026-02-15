@@ -167,10 +167,7 @@ fn decode_frame(frame: SseFrame) -> Result<Option<StreamingEvent>> {
                 match serde_json::from_str::<serde_json::Value>(&data) {
                     Ok(serde_json::Value::Object(mut map)) => {
                         if !map.contains_key("type") {
-                            map.insert(
-                                "type".to_owned(),
-                                serde_json::Value::String(event_name),
-                            );
+                            map.insert("type".to_owned(), serde_json::Value::String(event_name));
                             let injected = serde_json::Value::Object(map);
                             return serde_json::from_value::<StreamingEvent>(injected)
                                 .map(Some)
@@ -288,6 +285,266 @@ impl Stream for ResponseEventStream {
                 }
                 Poll::Pending => return Poll::Pending,
             }
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::collections::VecDeque;
+
+    /// A simple in-memory stream of byte chunks for testing.
+    struct TestStream {
+        chunks: VecDeque<Bytes>,
+    }
+
+    impl TestStream {
+        fn new(chunks: Vec<Bytes>) -> Self {
+            Self {
+                chunks: chunks.into(),
+            }
+        }
+    }
+
+    impl Stream for TestStream {
+        type Item = std::result::Result<Bytes, reqwest::Error>;
+
+        fn poll_next(self: Pin<&mut Self>, _cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
+            match self.get_mut().chunks.pop_front() {
+                Some(chunk) => Poll::Ready(Some(Ok(chunk))),
+                None => Poll::Ready(None),
+            }
+        }
+    }
+
+    /// Helper to pull the next item from a `ResponseEventStream`.
+    async fn next(stream: &mut ResponseEventStream) -> Option<Result<StreamingEvent>> {
+        std::future::poll_fn(|cx| Pin::new(&mut *stream).poll_next(cx)).await
+    }
+
+    /// Helper to collect all items from a `ResponseEventStream`.
+    async fn collect_all(stream: &mut ResponseEventStream) -> Vec<Result<StreamingEvent>> {
+        let mut events = Vec::new();
+        while let Some(item) = next(stream).await {
+            events.push(item);
+        }
+        events
+    }
+
+    /// A minimal `response.output_text.delta` JSON payload.
+    fn text_delta_json(seq: i32, delta: &str) -> String {
+        serde_json::json!({
+            "type": "response.output_text.delta",
+            "sequence_number": seq,
+            "item_id": "msg_001",
+            "output_index": 0,
+            "content_index": 0,
+            "delta": delta,
+            "logprobs": []
+        })
+        .to_string()
+    }
+
+    /// Wraps JSON data in an SSE frame with optional `event:` line.
+    fn sse_frame(event: Option<&str>, data: &str) -> String {
+        let mut frame = String::new();
+        if let Some(e) = event {
+            frame.push_str(&format!("event: {e}\n"));
+        }
+        frame.push_str(&format!("data: {data}\n\n"));
+        frame
+    }
+
+    // -----------------------------------------------------------------------
+    // 1. Parses multiple events
+    // -----------------------------------------------------------------------
+
+    #[tokio::test]
+    async fn parses_multiple_events() {
+        let body = format!(
+            "{}{}{}",
+            sse_frame(
+                Some("response.output_text.delta"),
+                &text_delta_json(0, "Hello"),
+            ),
+            sse_frame(
+                Some("response.output_text.delta"),
+                &text_delta_json(1, " world"),
+            ),
+            "data: [DONE]\n\n",
+        );
+
+        let stream = TestStream::new(vec![Bytes::from(body)]);
+        let mut event_stream = ResponseEventStream::from_stream(stream);
+        let events = collect_all(&mut event_stream).await;
+
+        assert_eq!(events.len(), 2);
+        for event in &events {
+            assert!(event.is_ok(), "expected Ok, got: {event:?}");
+        }
+
+        match events[0].as_ref().unwrap() {
+            StreamingEvent::ResponseOutputTextDelta { delta, .. } => {
+                assert_eq!(delta, "Hello");
+            }
+            other => panic!("expected ResponseOutputTextDelta, got: {other:?}"),
+        }
+        match events[1].as_ref().unwrap() {
+            StreamingEvent::ResponseOutputTextDelta { delta, .. } => {
+                assert_eq!(delta, " world");
+            }
+            other => panic!("expected ResponseOutputTextDelta, got: {other:?}"),
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // 2. Tolerant injection — SSE event name injected as "type" when missing
+    // -----------------------------------------------------------------------
+
+    #[tokio::test]
+    async fn tolerant_injection_adds_type_from_event_name() {
+        // JSON is missing the "type" field; SSE `event:` line provides it.
+        let data = serde_json::json!({
+            "sequence_number": 0,
+            "item_id": "msg_001",
+            "output_index": 0,
+            "content_index": 0,
+            "delta": "injected",
+            "logprobs": []
+        })
+        .to_string();
+
+        let body = format!(
+            "{}{}",
+            sse_frame(Some("response.output_text.delta"), &data),
+            "data: [DONE]\n\n",
+        );
+
+        let stream = TestStream::new(vec![Bytes::from(body)]);
+        let mut event_stream = ResponseEventStream::from_stream(stream);
+        let events = collect_all(&mut event_stream).await;
+
+        assert_eq!(events.len(), 1);
+        match events[0].as_ref().unwrap() {
+            StreamingEvent::ResponseOutputTextDelta { delta, .. } => {
+                assert_eq!(delta, "injected");
+            }
+            other => panic!("expected ResponseOutputTextDelta, got: {other:?}"),
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // 3. Mismatch detection — SSE event name disagrees with JSON type
+    // -----------------------------------------------------------------------
+
+    #[tokio::test]
+    async fn mismatch_detection_errors() {
+        // SSE says "response.completed" but JSON says "response.output_text.delta"
+        let data = text_delta_json(0, "mismatch");
+        let body = format!(
+            "{}{}",
+            sse_frame(Some("response.completed"), &data),
+            "data: [DONE]\n\n",
+        );
+
+        let stream = TestStream::new(vec![Bytes::from(body)]);
+        let mut event_stream = ResponseEventStream::from_stream(stream);
+
+        let event = next(&mut event_stream).await;
+        assert!(event.is_some());
+        let err = event.unwrap().unwrap_err();
+        match err {
+            crate::client::Error::Streaming(StreamingError::TypeMismatch { event, ty }) => {
+                assert_eq!(event, "response.completed");
+                assert_eq!(ty, "response.output_text.delta");
+            }
+            other => panic!("expected TypeMismatch, got: {other:?}"),
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // 4. Chunk-boundary robustness — event split across byte chunks
+    // -----------------------------------------------------------------------
+
+    #[tokio::test]
+    async fn chunk_boundary_robustness() {
+        let full = format!(
+            "{}{}",
+            sse_frame(
+                Some("response.output_text.delta"),
+                &text_delta_json(0, "split"),
+            ),
+            "data: [DONE]\n\n",
+        );
+
+        // Split roughly in the middle of the frame
+        let mid = full.len() / 2;
+        let chunk1 = Bytes::from(full[..mid].to_owned());
+        let chunk2 = Bytes::from(full[mid..].to_owned());
+
+        let stream = TestStream::new(vec![chunk1, chunk2]);
+        let mut event_stream = ResponseEventStream::from_stream(stream);
+
+        let events = collect_all(&mut event_stream).await;
+        assert_eq!(events.len(), 1);
+        assert!(events[0].is_ok());
+        match events[0].as_ref().unwrap() {
+            StreamingEvent::ResponseOutputTextDelta { delta, .. } => {
+                assert_eq!(delta, "split");
+            }
+            other => panic!("expected ResponseOutputTextDelta, got: {other:?}"),
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // 5. [DONE] termination — stream ends cleanly
+    // -----------------------------------------------------------------------
+
+    #[tokio::test]
+    async fn done_marker_terminates_stream() {
+        let body = format!(
+            "{}{}",
+            sse_frame(
+                Some("response.output_text.delta"),
+                &text_delta_json(0, "before done"),
+            ),
+            "data: [DONE]\n\n",
+        );
+
+        let stream = TestStream::new(vec![Bytes::from(body)]);
+        let mut event_stream = ResponseEventStream::from_stream(stream);
+
+        // First item should be the delta
+        let first = next(&mut event_stream).await;
+        assert!(first.is_some());
+        assert!(first.unwrap().is_ok());
+
+        // Stream should be terminated (no more items)
+        let second = next(&mut event_stream).await;
+        assert!(second.is_none(), "expected None after [DONE]");
+    }
+
+    // -----------------------------------------------------------------------
+    // 6. Event-too-large — exceeds MAX_EVENT_BYTES
+    // -----------------------------------------------------------------------
+
+    #[tokio::test]
+    async fn event_too_large_errors() {
+        // Send a chunk larger than MAX_EVENT_BYTES without a frame delimiter
+        // so the buffer grows past the limit.
+        let oversized = vec![b'x'; MAX_EVENT_BYTES + 1];
+        let stream = TestStream::new(vec![Bytes::from(oversized)]);
+        let mut event_stream = ResponseEventStream::from_stream(stream);
+
+        let event = next(&mut event_stream).await;
+        assert!(event.is_some());
+        let err = event.unwrap().unwrap_err();
+        match err {
+            crate::client::Error::Streaming(StreamingError::EventTooLarge { limit_bytes }) => {
+                assert_eq!(limit_bytes, MAX_EVENT_BYTES);
+            }
+            other => panic!("expected EventTooLarge, got: {other:?}"),
         }
     }
 }
