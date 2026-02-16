@@ -1011,6 +1011,24 @@ pub enum StreamingEvent {
         /// The error payload that was emitted.
         error: ErrorPayload,
     },
+
+    /// A streaming event with an unrecognized type value.
+    ///
+    /// Acts as a catch-all for forward compatibility when the server sends
+    /// event types this SDK version does not know about.
+    #[serde(untagged)]
+    Unknown(UnknownEvent),
+}
+
+/// An unknown streaming event type not recognized by this version of the SDK.
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
+pub struct UnknownEvent {
+    /// The event type string from the server (e.g., `"response.reasoning.delta"`).
+    #[serde(rename = "type")]
+    pub event_type: String,
+    /// The remaining JSON fields from the event payload (excludes the `"type"` field).
+    #[serde(flatten)]
+    pub payload: serde_json::Map<String, serde_json::Value>,
 }
 
 #[cfg(test)]
@@ -1066,6 +1084,70 @@ mod tests {
             !json.contains("\"text\""),
             "text should be omitted when None"
         );
+    }
+
+    #[test]
+    fn unknown_event_type_deserializes() {
+        let json = r#"{"type":"response.reasoning.delta","sequence_number":5,"content":"thinking..."}"#;
+        let event: StreamingEvent = serde_json::from_str(json).unwrap();
+        match event {
+            StreamingEvent::Unknown(ref u) => {
+                assert_eq!(u.event_type, "response.reasoning.delta");
+                assert_eq!(
+                    u.payload.get("sequence_number").unwrap(),
+                    &serde_json::json!(5)
+                );
+                assert_eq!(
+                    u.payload.get("content").unwrap(),
+                    &serde_json::json!("thinking...")
+                );
+                // "type" is extracted into event_type, not duplicated in payload
+                assert!(!u.payload.contains_key("type"));
+            }
+            other => panic!("expected Unknown, got: {other:?}"),
+        }
+    }
+
+    #[test]
+    fn known_event_type_still_matches_specific_variant() {
+        let json = serde_json::json!({
+            "type": "error",
+            "sequence_number": 1,
+            "error": {
+                "type": "server_error",
+                "message": "boom",
+                "code": null,
+                "param": null,
+                "headers": null
+            }
+        });
+        let event: StreamingEvent = serde_json::from_value(json).unwrap();
+        assert!(
+            matches!(event, StreamingEvent::Error { .. }),
+            "expected Error variant, got: {event:?}"
+        );
+    }
+
+    #[test]
+    fn unknown_event_round_trips() {
+        let json = r#"{"type":"response.new_thing","seq":42,"nested":{"a":1}}"#;
+        let event: StreamingEvent = serde_json::from_str(json).unwrap();
+        let reserialized = serde_json::to_value(&event).unwrap();
+        let original: serde_json::Value = serde_json::from_str(json).unwrap();
+        assert_eq!(reserialized, original);
+    }
+
+    #[test]
+    fn unknown_event_with_no_extra_fields() {
+        let json = r#"{"type":"response.heartbeat"}"#;
+        let event: StreamingEvent = serde_json::from_str(json).unwrap();
+        match event {
+            StreamingEvent::Unknown(ref u) => {
+                assert_eq!(u.event_type, "response.heartbeat");
+                assert!(u.payload.is_empty());
+            }
+            other => panic!("expected Unknown, got: {other:?}"),
+        }
     }
 }
 
