@@ -1,0 +1,1137 @@
+// Type Relationship Diagram for schelm-ores models
+// Generate SVG: dot -Tsvg type_relationships.dot -o type_relationships.svg
+// If rendering is slow, change splines=ortho to splines=true
+
+digraph TypeRelationships {
+    graph [
+        rankdir=TB
+        fontname="Helvetica"
+        bgcolor="white"
+        pad="0.5"
+        nodesep=0.7
+        ranksep=1.0
+        newrank=true
+        splines=ortho
+    ];
+
+    node [
+        shape=none
+        fontname="Helvetica"
+        margin="0"
+    ];
+
+    edge [
+        fontname="Helvetica"
+        fontsize=9
+        color="#475569"
+        arrowsize=0.7
+    ];
+
+    // ================================================================
+    //  MAIN API TYPES (Red headers)
+    // ================================================================
+
+    CreateResponseBody [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#DC2626" CELLPADDING="8" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="12"><B>CreateResponseBody</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="6" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+model : String?<BR ALIGN="LEFT"/>
+input : CreateResponseInput?<BR ALIGN="LEFT"/>
+previous_response_id : String?<BR ALIGN="LEFT"/>
+include : [IncludeEnum]?<BR ALIGN="LEFT"/>
+tools : [ResponsesToolParam]?<BR ALIGN="LEFT"/>
+tool_choice : ToolChoiceParam?<BR ALIGN="LEFT"/>
+metadata : MetadataParam?<BR ALIGN="LEFT"/>
+text : TextParam?<BR ALIGN="LEFT"/>
+temperature : f64?<BR ALIGN="LEFT"/>
+top_p : f64?<BR ALIGN="LEFT"/>
+presence_penalty : f64?<BR ALIGN="LEFT"/>
+frequency_penalty : f64?<BR ALIGN="LEFT"/>
+parallel_tool_calls : bool?<BR ALIGN="LEFT"/>
+stream : bool?<BR ALIGN="LEFT"/>
+stream_options : StreamOptionsParam?<BR ALIGN="LEFT"/>
+background : bool?<BR ALIGN="LEFT"/>
+max_output_tokens : i32?<BR ALIGN="LEFT"/>
+max_tool_calls : i32?<BR ALIGN="LEFT"/>
+reasoning : ReasoningParam?<BR ALIGN="LEFT"/>
+safety_identifier : String?<BR ALIGN="LEFT"/>
+prompt_cache_key : String?<BR ALIGN="LEFT"/>
+truncation : TruncationEnum?<BR ALIGN="LEFT"/>
+instructions : String?<BR ALIGN="LEFT"/>
+store : bool?<BR ALIGN="LEFT"/>
+service_tier : ServiceTierEnum?<BR ALIGN="LEFT"/>
+top_logprobs : i32?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    ResponseResource [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#DC2626" CELLPADDING="8" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="12"><B>ResponseResource</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="6" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+id : String<BR ALIGN="LEFT"/>
+object : String<BR ALIGN="LEFT"/>
+created_at : i64<BR ALIGN="LEFT"/>
+completed_at : i64?<BR ALIGN="LEFT"/>
+status : String<BR ALIGN="LEFT"/>
+incomplete_details : IncompleteDetails?<BR ALIGN="LEFT"/>
+model : String<BR ALIGN="LEFT"/>
+previous_response_id : String?<BR ALIGN="LEFT"/>
+instructions : String?<BR ALIGN="LEFT"/>
+output : [ItemField]<BR ALIGN="LEFT"/>
+error : Error?<BR ALIGN="LEFT"/>
+tools : [Tool]<BR ALIGN="LEFT"/>
+tool_choice : Value?<BR ALIGN="LEFT"/>
+truncation : TruncationEnum<BR ALIGN="LEFT"/>
+parallel_tool_calls : bool<BR ALIGN="LEFT"/>
+text : TextField<BR ALIGN="LEFT"/>
+top_p : f64<BR ALIGN="LEFT"/>
+presence_penalty : f64<BR ALIGN="LEFT"/>
+frequency_penalty : f64<BR ALIGN="LEFT"/>
+top_logprobs : i32<BR ALIGN="LEFT"/>
+temperature : f64<BR ALIGN="LEFT"/>
+reasoning : Reasoning?<BR ALIGN="LEFT"/>
+usage : Usage?<BR ALIGN="LEFT"/>
+max_output_tokens : i32?<BR ALIGN="LEFT"/>
+max_tool_calls : i32?<BR ALIGN="LEFT"/>
+store : bool<BR ALIGN="LEFT"/>
+background : bool<BR ALIGN="LEFT"/>
+service_tier : String<BR ALIGN="LEFT"/>
+metadata : Value<BR ALIGN="LEFT"/>
+safety_identifier : String?<BR ALIGN="LEFT"/>
+prompt_cache_key : String?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    // ================================================================
+    //  SIMPLE VALUE ENUMS (Purple headers)
+    // ================================================================
+
+    DetailEnum [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#7C3AED" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>DetailEnum</B></FONT><BR/><FONT COLOR="#C4B5FD" POINT-SIZE="8">alias: ImageDetail</FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+Auto<BR ALIGN="LEFT"/>
+High<BR ALIGN="LEFT"/>
+Low<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    MessageRole [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#7C3AED" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>MessageRole</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+User<BR ALIGN="LEFT"/>
+Assistant<BR ALIGN="LEFT"/>
+System<BR ALIGN="LEFT"/>
+Developer<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    MessageStatus [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#7C3AED" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>MessageStatus</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+InProgress<BR ALIGN="LEFT"/>
+Completed<BR ALIGN="LEFT"/>
+Incomplete<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    FunctionCallStatus [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#7C3AED" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>FunctionCallStatus</B></FONT><BR/><FONT COLOR="#C4B5FD" POINT-SIZE="8">alias: FunctionCallItemStatus</FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+InProgress<BR ALIGN="LEFT"/>
+Completed<BR ALIGN="LEFT"/>
+Incomplete<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    FunctionCallOutputStatusEnum [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#7C3AED" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>FunctionCallOutputStatusEnum</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+InProgress<BR ALIGN="LEFT"/>
+Completed<BR ALIGN="LEFT"/>
+Incomplete<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    IncludeEnum [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#7C3AED" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>IncludeEnum</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+ReasoningEncryptedContent<BR ALIGN="LEFT"/>
+MessageOutputTextLogprobs<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    ToolChoiceValueEnum [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#7C3AED" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>ToolChoiceValueEnum</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+None<BR ALIGN="LEFT"/>
+Auto<BR ALIGN="LEFT"/>
+Required<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    VerbosityEnum [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#7C3AED" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>VerbosityEnum</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+Low<BR ALIGN="LEFT"/>
+Medium<BR ALIGN="LEFT"/>
+High<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    ReasoningEffortEnum [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#7C3AED" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>ReasoningEffortEnum</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+None<BR ALIGN="LEFT"/>
+Low<BR ALIGN="LEFT"/>
+Medium<BR ALIGN="LEFT"/>
+High<BR ALIGN="LEFT"/>
+Xhigh<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    ReasoningSummaryEnum [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#7C3AED" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>ReasoningSummaryEnum</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+Concise<BR ALIGN="LEFT"/>
+Detailed<BR ALIGN="LEFT"/>
+Auto<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    TruncationEnum [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#7C3AED" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>TruncationEnum</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+Auto<BR ALIGN="LEFT"/>
+Disabled<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    ServiceTierEnum [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#7C3AED" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>ServiceTierEnum</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+Auto<BR ALIGN="LEFT"/>
+Default<BR ALIGN="LEFT"/>
+Flex<BR ALIGN="LEFT"/>
+Priority<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    // ================================================================
+    //  COMPLEX / TAGGED ENUMS (Green headers)
+    // ================================================================
+
+    CreateResponseInput [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#059669" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>CreateResponseInput</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+String(String)<BR ALIGN="LEFT"/>
+Array([ItemParam])<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    ItemParam [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#059669" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>ItemParam</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+ItemReference(ItemReferenceParam)<BR ALIGN="LEFT"/>
+Reasoning(ReasoningItemParam)<BR ALIGN="LEFT"/>
+Message(MessageItemParam)<BR ALIGN="LEFT"/>
+FunctionCall(FunctionCallItemParam)<BR ALIGN="LEFT"/>
+FunctionCallOutput(FunctionCallOutputItemParam)<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    MessageItemParam [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#059669" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>MessageItemParam</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+User(UserMessageItemParam)<BR ALIGN="LEFT"/>
+System(SystemMessageItemParam)<BR ALIGN="LEFT"/>
+Developer(DeveloperMessageItemParam)<BR ALIGN="LEFT"/>
+Assistant(AssistantMessageItemParam)<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    UserMessageContent [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#059669" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>UserMessageContent</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+Array([UserMessageContentPart])<BR ALIGN="LEFT"/>
+String(String)<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    UserMessageContentPart [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#059669" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>UserMessageContentPart</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+InputText(InputTextContentParam)<BR ALIGN="LEFT"/>
+InputImage(InputImageContentParamAutoParam)<BR ALIGN="LEFT"/>
+InputFile(InputFileContentParam)<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    SystemMessageContent [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#059669" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>SystemMessageContent</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+Array([InputTextContentParam])<BR ALIGN="LEFT"/>
+String(String)<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    AssistantMessageContent [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#059669" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>AssistantMessageContent</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+Array([AssistantMessageContentPart])<BR ALIGN="LEFT"/>
+String(String)<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    AssistantMessageContentPart [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#059669" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>AssistantMessageContentPart</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+OutputText(OutputTextContentParam)<BR ALIGN="LEFT"/>
+Refusal(RefusalContentParam)<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    FunctionCallOutput [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#059669" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>FunctionCallOutput</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+String(String)<BR ALIGN="LEFT"/>
+Array([FunctionCallOutputPart])<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    FunctionCallOutputPart [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#059669" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>FunctionCallOutputPart</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+InputText(InputTextContentParam)<BR ALIGN="LEFT"/>
+InputImage(InputImageContentParamAutoParam)<BR ALIGN="LEFT"/>
+InputFile(InputFileContentParam)<BR ALIGN="LEFT"/>
+InputVideo(InputVideoContent)<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    ResponsesToolParam [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#059669" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>ResponsesToolParam</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+Function(FunctionToolParam)<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    SpecificToolChoiceParam [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#059669" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>SpecificToolChoiceParam</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+SpecificFunction(SpecificFunctionParam)<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    ToolChoiceParam [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#059669" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>ToolChoiceParam</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+SpecificToolChoice(SpecificToolChoiceParam)<BR ALIGN="LEFT"/>
+ToolChoiceValue(ToolChoiceValueEnum)<BR ALIGN="LEFT"/>
+AllowedTools(AllowedToolsParam)<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    MessageContentPart [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#059669" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>MessageContentPart</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+InputText(InputTextContent)<BR ALIGN="LEFT"/>
+OutputText(OutputTextContent)<BR ALIGN="LEFT"/>
+Text(TextContent)<BR ALIGN="LEFT"/>
+SummaryText(SummaryTextContent)<BR ALIGN="LEFT"/>
+ReasoningText(ReasoningTextContent)<BR ALIGN="LEFT"/>
+Refusal(RefusalContent)<BR ALIGN="LEFT"/>
+InputImage(InputImageContent)<BR ALIGN="LEFT"/>
+InputFile(InputFileContent)<BR ALIGN="LEFT"/>
+InputVideo(InputVideoContent)<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    Annotation [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#059669" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>Annotation</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+UrlCitation(UrlCitationBody)<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    ItemField [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#059669" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>ItemField</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+Message(Message)<BR ALIGN="LEFT"/>
+FunctionCall(FunctionCall)<BR ALIGN="LEFT"/>
+FunctionCallOutput(FunctionCallOutputResource)<BR ALIGN="LEFT"/>
+Reasoning(ReasoningBody)<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    Tool [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#059669" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>Tool</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+Function(FunctionTool)<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    StreamingEvent [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#0891B2" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>StreamingEvent</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+ResponseCreated { response }<BR ALIGN="LEFT"/>
+ResponseQueued { response }<BR ALIGN="LEFT"/>
+ResponseInProgress { response }<BR ALIGN="LEFT"/>
+ResponseCompleted { response }<BR ALIGN="LEFT"/>
+ResponseFailed { response }<BR ALIGN="LEFT"/>
+ResponseIncomplete { response }<BR ALIGN="LEFT"/>
+ResponseOutputItemAdded { item }<BR ALIGN="LEFT"/>
+ResponseOutputItemDone { item }<BR ALIGN="LEFT"/>
+ResponseContentPartAdded { part }<BR ALIGN="LEFT"/>
+ResponseContentPartDone { part }<BR ALIGN="LEFT"/>
+ResponseOutputTextDelta { delta, logprobs }<BR ALIGN="LEFT"/>
+ResponseOutputTextDone { text, logprobs }<BR ALIGN="LEFT"/>
+Error { error }<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    // ================================================================
+    //  STRUCTS (Blue headers)
+    // ================================================================
+
+    // --- Request Config ---
+
+    TextParam [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>TextParam</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+format : Value?<BR ALIGN="LEFT"/>
+verbosity : VerbosityEnum?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    StreamOptionsParam [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>StreamOptionsParam</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+include_obfuscation : bool?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    ReasoningParam [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>ReasoningParam</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+effort : ReasoningEffortEnum?<BR ALIGN="LEFT"/>
+summary : ReasoningSummaryEnum?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    // --- Tool Config ---
+
+    FunctionToolParam [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>FunctionToolParam</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+name : String<BR ALIGN="LEFT"/>
+description : String?<BR ALIGN="LEFT"/>
+parameters : Value?<BR ALIGN="LEFT"/>
+strict : bool?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    SpecificFunctionParam [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>SpecificFunctionParam</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+ty : String<BR ALIGN="LEFT"/>
+name : String<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    AllowedToolsParam [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>AllowedToolsParam</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+ty : String<BR ALIGN="LEFT"/>
+tools : [SpecificToolChoiceParam]<BR ALIGN="LEFT"/>
+mode : ToolChoiceValueEnum?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    // --- Input Item Params ---
+
+    ItemReferenceParam [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>ItemReferenceParam</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+id : String<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    ReasoningItemParam [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>ReasoningItemParam</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+id : String?<BR ALIGN="LEFT"/>
+summary : [ReasoningSummaryContentParam]<BR ALIGN="LEFT"/>
+content : Value?<BR ALIGN="LEFT"/>
+encrypted_content : String?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    ReasoningSummaryContentParam [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>ReasoningSummaryContentParam</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+ty : String<BR ALIGN="LEFT"/>
+text : String<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    FunctionCallItemParam [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>FunctionCallItemParam</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+id : String?<BR ALIGN="LEFT"/>
+call_id : String<BR ALIGN="LEFT"/>
+name : String<BR ALIGN="LEFT"/>
+arguments : String<BR ALIGN="LEFT"/>
+status : FunctionCallStatus?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    FunctionCallOutputItemParam [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>FunctionCallOutputItemParam</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+id : String?<BR ALIGN="LEFT"/>
+call_id : String<BR ALIGN="LEFT"/>
+output : FunctionCallOutput<BR ALIGN="LEFT"/>
+status : FunctionCallStatus?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    // --- Message Item Params ---
+
+    UserMessageItemParam [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>UserMessageItemParam</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+id : String?<BR ALIGN="LEFT"/>
+role : String<BR ALIGN="LEFT"/>
+content : UserMessageContent<BR ALIGN="LEFT"/>
+status : String?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    SystemMessageItemParam [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>SystemMessageItemParam</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+id : String?<BR ALIGN="LEFT"/>
+role : String<BR ALIGN="LEFT"/>
+content : SystemMessageContent<BR ALIGN="LEFT"/>
+status : String?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    DeveloperMessageItemParam [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>DeveloperMessageItemParam</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+id : String?<BR ALIGN="LEFT"/>
+role : String<BR ALIGN="LEFT"/>
+content : SystemMessageContent<BR ALIGN="LEFT"/>
+status : String?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    AssistantMessageItemParam [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>AssistantMessageItemParam</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+id : String?<BR ALIGN="LEFT"/>
+role : String<BR ALIGN="LEFT"/>
+content : AssistantMessageContent<BR ALIGN="LEFT"/>
+status : String?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    // --- Input Content Leaf Types ---
+
+    InputTextContentParam [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>InputTextContentParam</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+text : String<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    InputImageContentParamAutoParam [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>InputImageContentParamAutoParam</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+image_url : String?<BR ALIGN="LEFT"/>
+detail : ImageDetail?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    InputFileContentParam [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>InputFileContentParam</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+filename : String?<BR ALIGN="LEFT"/>
+file_data : String?<BR ALIGN="LEFT"/>
+file_url : String?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    InputVideoContent [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>InputVideoContent</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+video_url : String<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    OutputTextContentParam [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>OutputTextContentParam</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+text : String<BR ALIGN="LEFT"/>
+annotations : [UrlCitationParam]?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    RefusalContentParam [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>RefusalContentParam</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+refusal : String<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    UrlCitationParam [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>UrlCitationParam</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+ty : String<BR ALIGN="LEFT"/>
+start_index : i32<BR ALIGN="LEFT"/>
+end_index : i32<BR ALIGN="LEFT"/>
+url : String<BR ALIGN="LEFT"/>
+title : String<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    // --- Response Config ---
+
+    TextField [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>TextField</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+format : Value<BR ALIGN="LEFT"/>
+verbosity : VerbosityEnum?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    Usage [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>Usage</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+input_tokens : i32<BR ALIGN="LEFT"/>
+output_tokens : i32<BR ALIGN="LEFT"/>
+total_tokens : i32<BR ALIGN="LEFT"/>
+input_tokens_details : InputTokensDetails<BR ALIGN="LEFT"/>
+output_tokens_details : OutputTokensDetails<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    InputTokensDetails [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>InputTokensDetails</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+cached_tokens : i32<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    OutputTokensDetails [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>OutputTokensDetails</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+reasoning_tokens : i32<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    Reasoning [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>Reasoning</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+effort : ReasoningEffortEnum?<BR ALIGN="LEFT"/>
+summary : ReasoningSummaryEnum?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    IncompleteDetails [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>IncompleteDetails</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+reason : String<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    Error [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>Error</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+code : String<BR ALIGN="LEFT"/>
+message : String<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    FunctionTool [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>FunctionTool</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+name : String<BR ALIGN="LEFT"/>
+description : String?<BR ALIGN="LEFT"/>
+parameters : Value<BR ALIGN="LEFT"/>
+strict : bool<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    // --- Response Items ---
+
+    Message [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>Message</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+id : String<BR ALIGN="LEFT"/>
+status : MessageStatus<BR ALIGN="LEFT"/>
+role : MessageRole<BR ALIGN="LEFT"/>
+content : [MessageContentPart]<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    FunctionCall [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>FunctionCall</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+id : String<BR ALIGN="LEFT"/>
+call_id : String<BR ALIGN="LEFT"/>
+name : String<BR ALIGN="LEFT"/>
+arguments : String<BR ALIGN="LEFT"/>
+status : FunctionCallStatus<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    FunctionCallOutputResource [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>FunctionCallOutputResource</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+id : String<BR ALIGN="LEFT"/>
+call_id : String<BR ALIGN="LEFT"/>
+output : FunctionCallOutput<BR ALIGN="LEFT"/>
+status : FunctionCallOutputStatusEnum<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    ReasoningBody [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>ReasoningBody</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+id : String<BR ALIGN="LEFT"/>
+content : [MessageContentPart]?<BR ALIGN="LEFT"/>
+summary : [MessageContentPart]<BR ALIGN="LEFT"/>
+encrypted_content : String?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    // --- Response Content Leaf Types ---
+
+    InputTextContent [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>InputTextContent</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+text : String<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    OutputTextContent [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>OutputTextContent</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+text : String<BR ALIGN="LEFT"/>
+annotations : [Annotation]<BR ALIGN="LEFT"/>
+logprobs : [LogProb]<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    TextContent [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>TextContent</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+text : String<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    SummaryTextContent [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>SummaryTextContent</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+text : String<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    ReasoningTextContent [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>ReasoningTextContent</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+text : String<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    RefusalContent [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>RefusalContent</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+refusal : String<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    InputImageContent [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>InputImageContent</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+image_url : String?<BR ALIGN="LEFT"/>
+detail : ImageDetail<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    InputFileContent [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>InputFileContent</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+filename : String<BR ALIGN="LEFT"/>
+file_url : String<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    // --- Annotations & LogProbs ---
+
+    UrlCitationBody [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>UrlCitationBody</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+url : String<BR ALIGN="LEFT"/>
+start_index : i32<BR ALIGN="LEFT"/>
+end_index : i32<BR ALIGN="LEFT"/>
+title : String<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    TopLogProb [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>TopLogProb</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+token : String<BR ALIGN="LEFT"/>
+logprob : f64<BR ALIGN="LEFT"/>
+bytes : [i32]<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    LogProb [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>LogProb</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+token : String<BR ALIGN="LEFT"/>
+logprob : f64<BR ALIGN="LEFT"/>
+bytes : [i32]<BR ALIGN="LEFT"/>
+top_logprobs : [TopLogProb]<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    // --- Streaming ---
+
+    ErrorPayload [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#0891B2" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>ErrorPayload</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+ty : String<BR ALIGN="LEFT"/>
+code : String?<BR ALIGN="LEFT"/>
+message : String<BR ALIGN="LEFT"/>
+param : String?<BR ALIGN="LEFT"/>
+headers : Map&lt;String, String&gt;?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    // --- Other ---
+
+    EmptyModelParam [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#6B7280" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>EmptyModelParam</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#9CA3AF">
+(empty)<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    MetadataParam [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#6B7280" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>MetadataParam</B></FONT><BR/><FONT COLOR="#D1D5DB" POINT-SIZE="8">type alias</FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+= Map&lt;String, String&gt;<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    // ================================================================
+    //  EDGES: CreateResponseBody field references
+    // ================================================================
+
+    CreateResponseBody -> CreateResponseInput [weight=5];
+    CreateResponseBody -> IncludeEnum [style=dashed, color="#94A3B8"];
+    CreateResponseBody -> ResponsesToolParam;
+    CreateResponseBody -> ToolChoiceParam;
+    CreateResponseBody -> MetadataParam [style=dashed, color="#94A3B8"];
+    CreateResponseBody -> TextParam;
+    CreateResponseBody -> StreamOptionsParam;
+    CreateResponseBody -> ReasoningParam;
+    CreateResponseBody -> TruncationEnum [style=dashed, color="#94A3B8"];
+    CreateResponseBody -> ServiceTierEnum [style=dashed, color="#94A3B8"];
+
+    // ================================================================
+    //  EDGES: Input item hierarchy
+    // ================================================================
+
+    CreateResponseInput -> ItemParam [weight=5];
+
+    ItemParam -> ItemReferenceParam;
+    ItemParam -> ReasoningItemParam;
+    ItemParam -> MessageItemParam [weight=3];
+    ItemParam -> FunctionCallItemParam;
+    ItemParam -> FunctionCallOutputItemParam;
+
+    MessageItemParam -> UserMessageItemParam [weight=3];
+    MessageItemParam -> SystemMessageItemParam;
+    MessageItemParam -> DeveloperMessageItemParam;
+    MessageItemParam -> AssistantMessageItemParam;
+
+    // ================================================================
+    //  EDGES: Message content (Param side)
+    // ================================================================
+
+    UserMessageItemParam -> UserMessageContent [weight=5];
+    UserMessageContent -> UserMessageContentPart [weight=5];
+    UserMessageContentPart -> InputTextContentParam;
+    UserMessageContentPart -> InputImageContentParamAutoParam;
+    UserMessageContentPart -> InputFileContentParam;
+
+    SystemMessageItemParam -> SystemMessageContent [weight=5];
+    DeveloperMessageItemParam -> SystemMessageContent;
+    SystemMessageContent -> InputTextContentParam;
+
+    AssistantMessageItemParam -> AssistantMessageContent [weight=5];
+    AssistantMessageContent -> AssistantMessageContentPart [weight=5];
+    AssistantMessageContentPart -> OutputTextContentParam;
+    AssistantMessageContentPart -> RefusalContentParam;
+
+    OutputTextContentParam -> UrlCitationParam;
+
+    InputImageContentParamAutoParam -> DetailEnum [style=dashed, color="#94A3B8", constraint=false];
+
+    // ================================================================
+    //  EDGES: Reasoning (Param side)
+    // ================================================================
+
+    ReasoningItemParam -> ReasoningSummaryContentParam [weight=5];
+
+    // ================================================================
+    //  EDGES: Function call (Param side)
+    // ================================================================
+
+    FunctionCallItemParam -> FunctionCallStatus [style=dashed, color="#94A3B8", constraint=false];
+    FunctionCallOutputItemParam -> FunctionCallOutput [weight=3];
+    FunctionCallOutputItemParam -> FunctionCallStatus [style=dashed, color="#94A3B8", constraint=false];
+
+    FunctionCallOutput -> FunctionCallOutputPart [weight=5];
+    FunctionCallOutputPart -> InputTextContentParam [constraint=false];
+    FunctionCallOutputPart -> InputImageContentParamAutoParam [constraint=false];
+    FunctionCallOutputPart -> InputFileContentParam [constraint=false];
+    FunctionCallOutputPart -> InputVideoContent;
+
+    // ================================================================
+    //  EDGES: Tool configuration
+    // ================================================================
+
+    ResponsesToolParam -> FunctionToolParam [weight=5];
+
+    ToolChoiceParam -> SpecificToolChoiceParam;
+    ToolChoiceParam -> ToolChoiceValueEnum [style=dashed, color="#94A3B8"];
+    ToolChoiceParam -> AllowedToolsParam;
+
+    SpecificToolChoiceParam -> SpecificFunctionParam [weight=5];
+    AllowedToolsParam -> SpecificToolChoiceParam;
+    AllowedToolsParam -> ToolChoiceValueEnum [style=dashed, color="#94A3B8", constraint=false];
+
+    // ================================================================
+    //  EDGES: Request config → enums
+    // ================================================================
+
+    TextParam -> VerbosityEnum [style=dashed, color="#94A3B8"];
+    ReasoningParam -> ReasoningEffortEnum [style=dashed, color="#94A3B8"];
+    ReasoningParam -> ReasoningSummaryEnum [style=dashed, color="#94A3B8"];
+
+    // ================================================================
+    //  EDGES: ResponseResource field references
+    // ================================================================
+
+    ResponseResource -> IncompleteDetails;
+    ResponseResource -> ItemField [weight=5];
+    ResponseResource -> Error;
+    ResponseResource -> Tool;
+    ResponseResource -> TruncationEnum [style=dashed, color="#94A3B8", constraint=false];
+    ResponseResource -> TextField;
+    ResponseResource -> Usage;
+    ResponseResource -> Reasoning;
+
+    // ================================================================
+    //  EDGES: Response item hierarchy
+    // ================================================================
+
+    ItemField -> Message [weight=3];
+    ItemField -> FunctionCall;
+    ItemField -> FunctionCallOutputResource;
+    ItemField -> ReasoningBody;
+
+    // ================================================================
+    //  EDGES: Message (Response side)
+    // ================================================================
+
+    Message -> MessageStatus [style=dashed, color="#94A3B8", constraint=false];
+    Message -> MessageRole [style=dashed, color="#94A3B8", constraint=false];
+    Message -> MessageContentPart [weight=5];
+
+    MessageContentPart -> InputTextContent;
+    MessageContentPart -> OutputTextContent [weight=3];
+    MessageContentPart -> TextContent;
+    MessageContentPart -> SummaryTextContent;
+    MessageContentPart -> ReasoningTextContent;
+    MessageContentPart -> RefusalContent;
+    MessageContentPart -> InputImageContent;
+    MessageContentPart -> InputFileContent;
+    MessageContentPart -> InputVideoContent [constraint=false];
+
+    // ================================================================
+    //  EDGES: Response content details
+    // ================================================================
+
+    OutputTextContent -> Annotation;
+    OutputTextContent -> LogProb;
+
+    Annotation -> UrlCitationBody [weight=5];
+    LogProb -> TopLogProb [weight=5];
+
+    InputImageContent -> DetailEnum [style=dashed, color="#94A3B8", constraint=false];
+
+    // ================================================================
+    //  EDGES: Function call (Response side)
+    // ================================================================
+
+    FunctionCall -> FunctionCallStatus [style=dashed, color="#94A3B8", constraint=false];
+    FunctionCallOutputResource -> FunctionCallOutput [constraint=false];
+    FunctionCallOutputResource -> FunctionCallOutputStatusEnum [style=dashed, color="#94A3B8", constraint=false];
+
+    // ================================================================
+    //  EDGES: ReasoningBody
+    // ================================================================
+
+    ReasoningBody -> MessageContentPart [constraint=false];
+
+    // ================================================================
+    //  EDGES: Response tools & config
+    // ================================================================
+
+    Tool -> FunctionTool [weight=5];
+    TextField -> VerbosityEnum [style=dashed, color="#94A3B8", constraint=false];
+    Usage -> InputTokensDetails [weight=5];
+    Usage -> OutputTokensDetails [weight=5];
+    Reasoning -> ReasoningEffortEnum [style=dashed, color="#94A3B8", constraint=false];
+    Reasoning -> ReasoningSummaryEnum [style=dashed, color="#94A3B8", constraint=false];
+
+    // ================================================================
+    //  EDGES: StreamingEvent
+    // ================================================================
+
+    StreamingEvent -> ResponseResource [style=dashed, color="#0891B2", constraint=false];
+    StreamingEvent -> ItemField [style=dashed, color="#0891B2", constraint=false];
+    StreamingEvent -> MessageContentPart [style=dashed, color="#0891B2", constraint=false];
+    StreamingEvent -> LogProb [style=dashed, color="#0891B2", constraint=false];
+    StreamingEvent -> ErrorPayload [weight=5, color="#0891B2"];
+
+    // ================================================================
+    //  LAYOUT CONSTRAINTS
+    // ================================================================
+
+    // Top-level API types side by side
+    {rank=same; CreateResponseBody; ResponseResource;}
+
+    // Request and response config on same level
+    {rank=same; TextParam; StreamOptionsParam; ReasoningParam; TextField; Usage; Reasoning;}
+
+    // Item-level enums side by side
+    {rank=same; ItemParam; ItemField;}
+
+    // Message item params and response message items aligned
+    {rank=same; MessageItemParam; Message; FunctionCall; FunctionCallOutputResource; ReasoningBody;}
+
+    // Simple value enums grouped together
+    {rank=same; DetailEnum; MessageRole; MessageStatus; FunctionCallStatus; FunctionCallOutputStatusEnum;}
+    {rank=same; VerbosityEnum; ReasoningEffortEnum; ReasoningSummaryEnum; TruncationEnum; ServiceTierEnum; IncludeEnum; ToolChoiceValueEnum;}
+
+    // Content part enums aligned
+    {rank=same; UserMessageContentPart; AssistantMessageContentPart; MessageContentPart;}
+
+    // Leaf content types (Param)
+    {rank=same; InputTextContentParam; InputImageContentParamAutoParam; InputFileContentParam; OutputTextContentParam; RefusalContentParam;}
+
+    // Leaf content types (Response)
+    {rank=same; InputTextContent; OutputTextContent; TextContent; SummaryTextContent; ReasoningTextContent; RefusalContent; InputImageContent; InputFileContent;}
+
+    // Annotations and logprobs
+    {rank=same; Annotation; LogProb; UrlCitationParam;}
+    {rank=same; UrlCitationBody; TopLogProb;}
+
+    // Streaming at the bottom
+    {rank=same; StreamingEvent; ErrorPayload;}
+
+    // Token details together
+    {rank=same; InputTokensDetails; OutputTokensDetails;}
+
+    // Tool config hierarchy
+    {rank=same; ToolChoiceParam; ResponsesToolParam;}
+    {rank=same; SpecificToolChoiceParam; AllowedToolsParam; FunctionToolParam;}
+    {rank=same; SpecificFunctionParam; EmptyModelParam;}
+}
