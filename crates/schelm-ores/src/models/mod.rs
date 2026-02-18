@@ -1149,6 +1149,30 @@ mod tests {
             other => panic!("expected Unknown, got: {other:?}"),
         }
     }
+
+    #[test]
+    fn known_event_type_with_missing_fields_falls_through_to_unknown() {
+        // When a known type tag matches but required fields are missing, serde's
+        // tagged variant fails and the untagged Unknown fallback catches it.
+        // This means schema evolution of known types won't break the stream.
+        let json = serde_json::json!({
+            "type": "response.output_text.delta",
+            "sequence_number": 1,
+            "item_id": "msg_001",
+            // missing: output_index, content_index, delta, logprobs
+        });
+        let event: StreamingEvent = serde_json::from_value(json).unwrap();
+        match event {
+            StreamingEvent::Unknown(ref u) => {
+                assert_eq!(u.event_type, "response.output_text.delta");
+                assert_eq!(
+                    u.payload.get("sequence_number").unwrap(),
+                    &serde_json::json!(1)
+                );
+            }
+            other => panic!("expected Unknown fallback, got: {other:?}"),
+        }
+    }
 }
 
 /// An error payload that was emitted for a streaming error event.
