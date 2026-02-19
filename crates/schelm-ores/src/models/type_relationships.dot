@@ -891,14 +891,6 @@ headers : Map&lt;String, String&gt;?<BR ALIGN="LEFT"/>
 
     // --- Other ---
 
-    EmptyModelParam [label=<
-<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
-<TR><TD BGCOLOR="#6B7280" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>EmptyModelParam</B></FONT></TD></TR>
-<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#9CA3AF">
-(empty)<BR ALIGN="LEFT"/>
-</FONT></TD></TR>
-</TABLE>>];
-
     MetadataParam [label=<
 <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
 <TR><TD BGCOLOR="#6B7280" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>MetadataParam</B></FONT><BR/><FONT COLOR="#D1D5DB" POINT-SIZE="8">type alias</FONT></TD></TR>
@@ -1133,7 +1125,7 @@ headers : Map&lt;String, String&gt;?<BR ALIGN="LEFT"/>
     // Tool config hierarchy
     {rank=same; ToolChoiceParam; ResponsesToolParam;}
     {rank=same; SpecificToolChoiceParam; AllowedToolsParam; FunctionToolParam;}
-    {rank=same; SpecificFunctionParam; EmptyModelParam;}
+    {rank=same; SpecificFunctionParam;}
 
     // ================================================================
     //  LEGEND (single compact node, anchored to the left)
@@ -1144,27 +1136,27 @@ headers : Map&lt;String, String&gt;?<BR ALIGN="LEFT"/>
 <TR><TD COLSPAN="2" CELLPADDING="6" ALIGN="LEFT"><FONT POINT-SIZE="13" COLOR="#1F2937"><B>Legend</B></FONT></TD></TR>
 <HR/>
 <TR>
-  <TD BGCOLOR="#DC2626" WIDTH="18" HEIGHT="12" FIXEDSIZE="TRUE" CELLPADDING="3"> </TD>
+  <TD BGCOLOR="#DC2626" WIDTH="18" HEIGHT="12" CELLPADDING="3"><FONT POINT-SIZE="4"> </FONT></TD>
   <TD ALIGN="LEFT" CELLPADDING="4"><FONT POINT-SIZE="9" COLOR="#4B5563">API Entry Point</FONT></TD>
 </TR>
 <TR>
-  <TD BGCOLOR="#2563EB" WIDTH="18" HEIGHT="12" FIXEDSIZE="TRUE" CELLPADDING="3"> </TD>
+  <TD BGCOLOR="#2563EB" WIDTH="18" HEIGHT="12" CELLPADDING="3"><FONT POINT-SIZE="4"> </FONT></TD>
   <TD ALIGN="LEFT" CELLPADDING="4"><FONT POINT-SIZE="9" COLOR="#4B5563">Struct</FONT></TD>
 </TR>
 <TR>
-  <TD BGCOLOR="#7C3AED" WIDTH="18" HEIGHT="12" FIXEDSIZE="TRUE" CELLPADDING="3"> </TD>
+  <TD BGCOLOR="#7C3AED" WIDTH="18" HEIGHT="12" CELLPADDING="3"><FONT POINT-SIZE="4"> </FONT></TD>
   <TD ALIGN="LEFT" CELLPADDING="4"><FONT POINT-SIZE="9" COLOR="#4B5563">Value Enum</FONT></TD>
 </TR>
 <TR>
-  <TD BGCOLOR="#059669" WIDTH="18" HEIGHT="12" FIXEDSIZE="TRUE" CELLPADDING="3"> </TD>
+  <TD BGCOLOR="#059669" WIDTH="18" HEIGHT="12" CELLPADDING="3"><FONT POINT-SIZE="4"> </FONT></TD>
   <TD ALIGN="LEFT" CELLPADDING="4"><FONT POINT-SIZE="9" COLOR="#4B5563">Tagged / Sum Enum</FONT></TD>
 </TR>
 <TR>
-  <TD BGCOLOR="#0891B2" WIDTH="18" HEIGHT="12" FIXEDSIZE="TRUE" CELLPADDING="3"> </TD>
+  <TD BGCOLOR="#0891B2" WIDTH="18" HEIGHT="12" CELLPADDING="3"><FONT POINT-SIZE="4"> </FONT></TD>
   <TD ALIGN="LEFT" CELLPADDING="4"><FONT POINT-SIZE="9" COLOR="#4B5563">Streaming</FONT></TD>
 </TR>
 <TR>
-  <TD BGCOLOR="#6B7280" WIDTH="18" HEIGHT="12" FIXEDSIZE="TRUE" CELLPADDING="3"> </TD>
+  <TD BGCOLOR="#6B7280" WIDTH="18" HEIGHT="12" CELLPADDING="3"><FONT POINT-SIZE="4"> </FONT></TD>
   <TD ALIGN="LEFT" CELLPADDING="4"><FONT POINT-SIZE="9" COLOR="#4B5563">Type Alias / Other</FONT></TD>
 </TR>
 <HR/>
