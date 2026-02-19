@@ -1136,75 +1136,47 @@ headers : Map&lt;String, String&gt;?<BR ALIGN="LEFT"/>
     {rank=same; SpecificFunctionParam; EmptyModelParam;}
 
     // ================================================================
-    //  LEGEND
+    //  LEGEND (single compact node, anchored to the left)
     // ================================================================
 
-    subgraph cluster_legend {
-        graph [
-            label="Legend"
-            fontname="Helvetica"
-            fontsize=14
-            fontcolor="#1F2937"
-            style="rounded,dashed"
-            color="#9CA3AF"
-            bgcolor="#F9FAFB"
-            labeljust=l
-            margin=16
-        ];
-
-        legend_api [label=<
-<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
-<TR><TD BGCOLOR="#DC2626" CELLPADDING="6" WIDTH="180" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="10"><B>API Entry Point</B></FONT></TD></TR>
-<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT"><FONT POINT-SIZE="9" COLOR="#4B5563">CreateResponseBody, ResponseResource</FONT></TD></TR>
+    legend [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#9CA3AF" BGCOLOR="#F9FAFB" CELLPADDING="2">
+<TR><TD COLSPAN="2" CELLPADDING="6" ALIGN="LEFT"><FONT POINT-SIZE="13" COLOR="#1F2937"><B>Legend</B></FONT></TD></TR>
+<HR/>
+<TR>
+  <TD BGCOLOR="#DC2626" WIDTH="18" HEIGHT="12" FIXEDSIZE="TRUE" CELLPADDING="3"> </TD>
+  <TD ALIGN="LEFT" CELLPADDING="4"><FONT POINT-SIZE="9" COLOR="#4B5563">API Entry Point</FONT></TD>
+</TR>
+<TR>
+  <TD BGCOLOR="#2563EB" WIDTH="18" HEIGHT="12" FIXEDSIZE="TRUE" CELLPADDING="3"> </TD>
+  <TD ALIGN="LEFT" CELLPADDING="4"><FONT POINT-SIZE="9" COLOR="#4B5563">Struct</FONT></TD>
+</TR>
+<TR>
+  <TD BGCOLOR="#7C3AED" WIDTH="18" HEIGHT="12" FIXEDSIZE="TRUE" CELLPADDING="3"> </TD>
+  <TD ALIGN="LEFT" CELLPADDING="4"><FONT POINT-SIZE="9" COLOR="#4B5563">Value Enum</FONT></TD>
+</TR>
+<TR>
+  <TD BGCOLOR="#059669" WIDTH="18" HEIGHT="12" FIXEDSIZE="TRUE" CELLPADDING="3"> </TD>
+  <TD ALIGN="LEFT" CELLPADDING="4"><FONT POINT-SIZE="9" COLOR="#4B5563">Tagged / Sum Enum</FONT></TD>
+</TR>
+<TR>
+  <TD BGCOLOR="#0891B2" WIDTH="18" HEIGHT="12" FIXEDSIZE="TRUE" CELLPADDING="3"> </TD>
+  <TD ALIGN="LEFT" CELLPADDING="4"><FONT POINT-SIZE="9" COLOR="#4B5563">Streaming</FONT></TD>
+</TR>
+<TR>
+  <TD BGCOLOR="#6B7280" WIDTH="18" HEIGHT="12" FIXEDSIZE="TRUE" CELLPADDING="3"> </TD>
+  <TD ALIGN="LEFT" CELLPADDING="4"><FONT POINT-SIZE="9" COLOR="#4B5563">Type Alias / Other</FONT></TD>
+</TR>
+<HR/>
+<TR>
+  <TD COLSPAN="2" CELLPADDING="4" ALIGN="LEFT"><FONT POINT-SIZE="9" COLOR="#4B5563">&#x2500;&#x2500;&#x25B6;  contains / wraps type</FONT></TD>
+</TR>
+<TR>
+  <TD COLSPAN="2" CELLPADDING="4" ALIGN="LEFT"><FONT POINT-SIZE="9" COLOR="#94A3B8">- - &#x25B6;  references enum value</FONT></TD>
+</TR>
 </TABLE>>];
 
-        legend_struct [label=<
-<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
-<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" WIDTH="180" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="10"><B>Struct</B></FONT></TD></TR>
-<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT"><FONT POINT-SIZE="9" COLOR="#4B5563">Field-bearing data types</FONT></TD></TR>
-</TABLE>>];
-
-        legend_value_enum [label=<
-<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
-<TR><TD BGCOLOR="#7C3AED" CELLPADDING="6" WIDTH="180" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="10"><B>Value Enum</B></FONT></TD></TR>
-<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT"><FONT POINT-SIZE="9" COLOR="#4B5563">Simple variant enums (no data)</FONT></TD></TR>
-</TABLE>>];
-
-        legend_tagged_enum [label=<
-<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
-<TR><TD BGCOLOR="#059669" CELLPADDING="6" WIDTH="180" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="10"><B>Tagged / Sum Enum</B></FONT></TD></TR>
-<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT"><FONT POINT-SIZE="9" COLOR="#4B5563">Enums wrapping inner types</FONT></TD></TR>
-</TABLE>>];
-
-        legend_streaming [label=<
-<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
-<TR><TD BGCOLOR="#0891B2" CELLPADDING="6" WIDTH="180" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="10"><B>Streaming</B></FONT></TD></TR>
-<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT"><FONT POINT-SIZE="9" COLOR="#4B5563">SSE streaming event types</FONT></TD></TR>
-</TABLE>>];
-
-        legend_other [label=<
-<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
-<TR><TD BGCOLOR="#6B7280" CELLPADDING="6" WIDTH="180" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="10"><B>Type Alias / Other</B></FONT></TD></TR>
-<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT"><FONT POINT-SIZE="9" COLOR="#4B5563">Aliases and marker types</FONT></TD></TR>
-</TABLE>>];
-
-        legend_solid_edge [label=<
-<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">
-<TR><TD CELLPADDING="4" ALIGN="LEFT"><FONT POINT-SIZE="9" COLOR="#4B5563">Solid line: contains / wraps type</FONT></TD></TR>
-</TABLE>>];
-
-        legend_dashed_edge [label=<
-<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">
-<TR><TD CELLPADDING="4" ALIGN="LEFT"><FONT POINT-SIZE="9" COLOR="#4B5563">Dashed line: references enum value</FONT></TD></TR>
-</TABLE>>];
-
-        // Stack legend items vertically
-        legend_api -> legend_struct [style=invis];
-        legend_struct -> legend_value_enum [style=invis];
-        legend_value_enum -> legend_tagged_enum [style=invis];
-        legend_tagged_enum -> legend_streaming [style=invis];
-        legend_streaming -> legend_other [style=invis];
-        legend_other -> legend_solid_edge [style=invis];
-        legend_solid_edge -> legend_dashed_edge [style=invis];
-    }
+    // Anchor legend to the top-left alongside the main API types
+    {rank=same; legend; CreateResponseBody; ResponseResource;}
+    legend -> CreateResponseBody [style=invis];
 }
