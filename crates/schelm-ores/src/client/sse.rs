@@ -547,4 +547,85 @@ mod tests {
             other => panic!("expected EventTooLarge, got: {other:?}"),
         }
     }
+
+    // -----------------------------------------------------------------------
+    // 7. Unknown event type — does not kill the stream
+    // -----------------------------------------------------------------------
+
+    #[tokio::test]
+    async fn unknown_event_type_does_not_kill_stream() {
+        let unknown_json = serde_json::json!({
+            "type": "response.reasoning.delta",
+            "sequence_number": 0,
+            "content": "thinking"
+        })
+        .to_string();
+
+        let body = format!(
+            "{}{}{}",
+            sse_frame(Some("response.reasoning.delta"), &unknown_json),
+            sse_frame(
+                Some("response.output_text.delta"),
+                &text_delta_json(1, "Hello"),
+            ),
+            "data: [DONE]\n\n",
+        );
+
+        let stream = TestStream::new(vec![Bytes::from(body)]);
+        let mut event_stream = ResponseEventStream::from_stream(stream);
+        let events = collect_all(&mut event_stream).await;
+
+        assert_eq!(events.len(), 2);
+
+        // First event should be Unknown
+        match events[0].as_ref().unwrap() {
+            StreamingEvent::Unknown(u) => {
+                assert_eq!(u.event_type, "response.reasoning.delta");
+                assert_eq!(
+                    u.payload.get("content").unwrap(),
+                    &serde_json::json!("thinking")
+                );
+            }
+            other => panic!("expected Unknown, got: {other:?}"),
+        }
+
+        // Second event should be the known text delta
+        match events[1].as_ref().unwrap() {
+            StreamingEvent::ResponseOutputTextDelta { delta, .. } => {
+                assert_eq!(delta, "Hello");
+            }
+            other => panic!("expected ResponseOutputTextDelta, got: {other:?}"),
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // 8. Unknown event with type injection from SSE header
+    // -----------------------------------------------------------------------
+
+    #[tokio::test]
+    async fn unknown_event_with_type_injection() {
+        // JSON body has no "type" field; SSE event: header provides it
+        let data = r#"{"sequence_number":0,"data":"something"}"#;
+        let body = format!(
+            "{}{}",
+            sse_frame(Some("response.new_feature"), data),
+            "data: [DONE]\n\n",
+        );
+
+        let stream = TestStream::new(vec![Bytes::from(body)]);
+        let mut event_stream = ResponseEventStream::from_stream(stream);
+        let events = collect_all(&mut event_stream).await;
+
+        assert_eq!(events.len(), 1);
+        match events[0].as_ref().unwrap() {
+            StreamingEvent::Unknown(u) => {
+                assert_eq!(u.event_type, "response.new_feature");
+                assert_eq!(
+                    u.payload.get("data").unwrap(),
+                    &serde_json::json!("something")
+                );
+            }
+            other => panic!("expected Unknown, got: {other:?}"),
+        }
+    }
 }

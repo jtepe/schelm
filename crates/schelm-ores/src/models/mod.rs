@@ -869,7 +869,7 @@ pub struct ResponseResource {
     pub prompt_cache_key: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
+#[derive(Debug, Serialize, Clone, PartialEq)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum StreamingEvent {
     /// A streaming event that indicated the response was created.
@@ -1011,6 +1011,212 @@ pub enum StreamingEvent {
         /// The error payload that was emitted.
         error: ErrorPayload,
     },
+
+    /// A streaming event with an unrecognized type value.
+    ///
+    /// Acts as a catch-all for forward compatibility when the server sends
+    /// event types this SDK version does not know about.
+    #[serde(untagged)]
+    Unknown(UnknownEvent),
+}
+
+/// Private helper enum: all known variants only (no Unknown fallback).
+///
+/// Used by the custom `Deserialize` impl on `StreamingEvent` to distinguish
+/// "truly unknown type" (→ `Unknown`) from "known type with bad fields" (→ error).
+#[derive(Deserialize)]
+#[serde(tag = "type", rename_all = "snake_case")]
+enum KnownStreamingEvent {
+    #[serde(rename = "response.created")]
+    ResponseCreated {
+        sequence_number: i32,
+        response: ResponseResource,
+    },
+    #[serde(rename = "response.queued")]
+    ResponseQueued {
+        sequence_number: i32,
+        response: ResponseResource,
+    },
+    #[serde(rename = "response.in_progress")]
+    ResponseInProgress {
+        sequence_number: i32,
+        response: ResponseResource,
+    },
+    #[serde(rename = "response.completed")]
+    ResponseCompleted {
+        sequence_number: i32,
+        response: ResponseResource,
+    },
+    #[serde(rename = "response.failed")]
+    ResponseFailed {
+        sequence_number: i32,
+        response: ResponseResource,
+    },
+    #[serde(rename = "response.incomplete")]
+    ResponseIncomplete {
+        sequence_number: i32,
+        response: ResponseResource,
+    },
+    #[serde(rename = "response.output_item.added")]
+    ResponseOutputItemAdded {
+        sequence_number: i32,
+        output_index: i32,
+        item: Option<ItemField>,
+    },
+    #[serde(rename = "response.output_item.done")]
+    ResponseOutputItemDone {
+        sequence_number: i32,
+        output_index: i32,
+        item: Option<ItemField>,
+    },
+    #[serde(rename = "response.content_part.added")]
+    ResponseContentPartAdded {
+        sequence_number: i32,
+        item_id: String,
+        output_index: i32,
+        content_index: i32,
+        part: MessageContentPart,
+    },
+    #[serde(rename = "response.content_part.done")]
+    ResponseContentPartDone {
+        sequence_number: i32,
+        item_id: String,
+        output_index: i32,
+        content_index: i32,
+        part: MessageContentPart,
+    },
+    #[serde(rename = "response.output_text.delta")]
+    ResponseOutputTextDelta {
+        sequence_number: i32,
+        item_id: String,
+        output_index: i32,
+        content_index: i32,
+        delta: String,
+        logprobs: Vec<LogProb>,
+        obfuscation: Option<String>,
+    },
+    #[serde(rename = "response.output_text.done")]
+    ResponseOutputTextDone {
+        sequence_number: i32,
+        item_id: String,
+        output_index: i32,
+        content_index: i32,
+        text: String,
+        logprobs: Vec<LogProb>,
+    },
+    #[serde(rename = "error")]
+    Error {
+        sequence_number: i32,
+        error: ErrorPayload,
+    },
+}
+
+impl From<KnownStreamingEvent> for StreamingEvent {
+    fn from(known: KnownStreamingEvent) -> Self {
+        match known {
+            KnownStreamingEvent::ResponseCreated { sequence_number, response } => {
+                StreamingEvent::ResponseCreated { sequence_number, response }
+            }
+            KnownStreamingEvent::ResponseQueued { sequence_number, response } => {
+                StreamingEvent::ResponseQueued { sequence_number, response }
+            }
+            KnownStreamingEvent::ResponseInProgress { sequence_number, response } => {
+                StreamingEvent::ResponseInProgress { sequence_number, response }
+            }
+            KnownStreamingEvent::ResponseCompleted { sequence_number, response } => {
+                StreamingEvent::ResponseCompleted { sequence_number, response }
+            }
+            KnownStreamingEvent::ResponseFailed { sequence_number, response } => {
+                StreamingEvent::ResponseFailed { sequence_number, response }
+            }
+            KnownStreamingEvent::ResponseIncomplete { sequence_number, response } => {
+                StreamingEvent::ResponseIncomplete { sequence_number, response }
+            }
+            KnownStreamingEvent::ResponseOutputItemAdded { sequence_number, output_index, item } => {
+                StreamingEvent::ResponseOutputItemAdded { sequence_number, output_index, item }
+            }
+            KnownStreamingEvent::ResponseOutputItemDone { sequence_number, output_index, item } => {
+                StreamingEvent::ResponseOutputItemDone { sequence_number, output_index, item }
+            }
+            KnownStreamingEvent::ResponseContentPartAdded { sequence_number, item_id, output_index, content_index, part } => {
+                StreamingEvent::ResponseContentPartAdded { sequence_number, item_id, output_index, content_index, part }
+            }
+            KnownStreamingEvent::ResponseContentPartDone { sequence_number, item_id, output_index, content_index, part } => {
+                StreamingEvent::ResponseContentPartDone { sequence_number, item_id, output_index, content_index, part }
+            }
+            KnownStreamingEvent::ResponseOutputTextDelta { sequence_number, item_id, output_index, content_index, delta, logprobs, obfuscation } => {
+                StreamingEvent::ResponseOutputTextDelta { sequence_number, item_id, output_index, content_index, delta, logprobs, obfuscation }
+            }
+            KnownStreamingEvent::ResponseOutputTextDone { sequence_number, item_id, output_index, content_index, text, logprobs } => {
+                StreamingEvent::ResponseOutputTextDone { sequence_number, item_id, output_index, content_index, text, logprobs }
+            }
+            KnownStreamingEvent::Error { sequence_number, error } => {
+                StreamingEvent::Error { sequence_number, error }
+            }
+        }
+    }
+}
+
+impl<'de> Deserialize<'de> for StreamingEvent {
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let value = serde_json::Value::deserialize(deserializer)?;
+
+        match serde_json::from_value::<KnownStreamingEvent>(value.clone()) {
+            Ok(known) => Ok(known.into()),
+            Err(known_err) => {
+                // Determine whether this is a truly unknown type or a known type
+                // that failed field validation.
+                let event_type = value
+                    .get("type")
+                    .and_then(|v| v.as_str())
+                    .unwrap_or("");
+
+                if is_known_event_type(event_type) {
+                    // Known type, but required fields are missing/wrong — real error.
+                    Err(serde::de::Error::custom(known_err))
+                } else {
+                    // Truly unknown type — forward-compatible fallback.
+                    serde_json::from_value::<UnknownEvent>(value)
+                        .map(StreamingEvent::Unknown)
+                        .map_err(serde::de::Error::custom)
+                }
+            }
+        }
+    }
+}
+
+/// Returns `true` if `ty` matches a type string handled by a known `StreamingEvent` variant.
+fn is_known_event_type(ty: &str) -> bool {
+    matches!(
+        ty,
+        "response.created"
+            | "response.queued"
+            | "response.in_progress"
+            | "response.completed"
+            | "response.failed"
+            | "response.incomplete"
+            | "response.output_item.added"
+            | "response.output_item.done"
+            | "response.content_part.added"
+            | "response.content_part.done"
+            | "response.output_text.delta"
+            | "response.output_text.done"
+            | "error"
+    )
+}
+
+/// An unknown streaming event type not recognized by this version of the SDK.
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
+pub struct UnknownEvent {
+    /// The event type string from the server (e.g., `"response.reasoning.delta"`).
+    #[serde(rename = "type")]
+    pub event_type: String,
+    /// The remaining JSON fields from the event payload (excludes the `"type"` field).
+    #[serde(flatten)]
+    pub payload: serde_json::Map<String, serde_json::Value>,
 }
 
 #[cfg(test)]
@@ -1065,6 +1271,90 @@ mod tests {
         assert!(
             !json.contains("\"text\""),
             "text should be omitted when None"
+        );
+    }
+
+    #[test]
+    fn unknown_event_type_deserializes() {
+        let json = r#"{"type":"response.reasoning.delta","sequence_number":5,"content":"thinking..."}"#;
+        let event: StreamingEvent = serde_json::from_str(json).unwrap();
+        match event {
+            StreamingEvent::Unknown(ref u) => {
+                assert_eq!(u.event_type, "response.reasoning.delta");
+                assert_eq!(
+                    u.payload.get("sequence_number").unwrap(),
+                    &serde_json::json!(5)
+                );
+                assert_eq!(
+                    u.payload.get("content").unwrap(),
+                    &serde_json::json!("thinking...")
+                );
+                // "type" is extracted into event_type, not duplicated in payload
+                assert!(!u.payload.contains_key("type"));
+            }
+            other => panic!("expected Unknown, got: {other:?}"),
+        }
+    }
+
+    #[test]
+    fn known_event_type_still_matches_specific_variant() {
+        let json = serde_json::json!({
+            "type": "error",
+            "sequence_number": 1,
+            "error": {
+                "type": "server_error",
+                "message": "boom",
+                "code": null,
+                "param": null,
+                "headers": null
+            }
+        });
+        let event: StreamingEvent = serde_json::from_value(json).unwrap();
+        assert!(
+            matches!(event, StreamingEvent::Error { .. }),
+            "expected Error variant, got: {event:?}"
+        );
+    }
+
+    #[test]
+    fn unknown_event_round_trips() {
+        let json = r#"{"type":"response.new_thing","seq":42,"nested":{"a":1}}"#;
+        let event: StreamingEvent = serde_json::from_str(json).unwrap();
+        let reserialized = serde_json::to_value(&event).unwrap();
+        let original: serde_json::Value = serde_json::from_str(json).unwrap();
+        assert_eq!(reserialized, original);
+    }
+
+    #[test]
+    fn unknown_event_with_no_extra_fields() {
+        let json = r#"{"type":"response.heartbeat"}"#;
+        let event: StreamingEvent = serde_json::from_str(json).unwrap();
+        match event {
+            StreamingEvent::Unknown(ref u) => {
+                assert_eq!(u.event_type, "response.heartbeat");
+                assert!(u.payload.is_empty());
+            }
+            other => panic!("expected Unknown, got: {other:?}"),
+        }
+    }
+
+    #[test]
+    fn known_event_type_with_missing_fields_returns_error() {
+        // When a known type tag matches but required fields are missing,
+        // deserialization returns an error instead of silently falling through
+        // to Unknown. This ensures real deserialization bugs are caught.
+        let json = serde_json::json!({
+            "type": "response.output_text.delta",
+            "sequence_number": 1,
+            "item_id": "msg_001",
+            // missing: output_index, content_index, delta, logprobs
+        });
+        let result = serde_json::from_value::<StreamingEvent>(json);
+        assert!(result.is_err(), "expected error for known type with missing fields");
+        let err_msg = result.unwrap_err().to_string();
+        assert!(
+            err_msg.contains("missing field"),
+            "error should mention missing field, got: {err_msg}"
         );
     }
 }
