@@ -1003,6 +1003,158 @@ pub enum StreamingEvent {
         /// The token log probabilities that were emitted with the final text, if any.
         logprobs: Vec<LogProb>,
     },
+    /// A streaming event that indicated a reasoning summary part was added.
+    #[serde(rename = "response.reasoning_summary_part.added")]
+    ResponseReasoningSummaryPartAdded {
+        /// The sequence number of the event that was emitted.
+        sequence_number: i32,
+        /// The ID of the item that was updated.
+        item_id: String,
+        /// The index of the output item that was updated.
+        output_index: i32,
+        /// The index of the summary part that was added.
+        summary_index: i32,
+        /// A summary content part that was added.
+        part: MessageContentPart,
+    },
+    /// A streaming event that indicated a reasoning summary part was completed.
+    #[serde(rename = "response.reasoning_summary_part.done")]
+    ResponseReasoningSummaryPartDone {
+        /// The sequence number of the event that was emitted.
+        sequence_number: i32,
+        /// The ID of the item that was updated.
+        item_id: String,
+        /// The index of the output item that was updated.
+        output_index: i32,
+        /// The index of the summary part that was completed.
+        summary_index: i32,
+        /// A summary content part that was completed.
+        part: MessageContentPart,
+    },
+    /// A streaming event that indicated refusal text was incrementally added.
+    #[serde(rename = "response.refusal.delta")]
+    ResponseRefusalDelta {
+        /// The sequence number of the event that was emitted.
+        sequence_number: i32,
+        /// The ID of the item that was updated.
+        item_id: String,
+        /// The index of the output item that was updated.
+        output_index: i32,
+        /// The index of the content part that was updated.
+        content_index: i32,
+        /// The refusal text delta that was appended.
+        delta: String,
+    },
+    /// A streaming event that indicated refusal text was completed.
+    #[serde(rename = "response.refusal.done")]
+    ResponseRefusalDone {
+        /// The sequence number of the event that was emitted.
+        sequence_number: i32,
+        /// The ID of the item that was updated.
+        item_id: String,
+        /// The index of the output item that was updated.
+        output_index: i32,
+        /// The index of the content part that was completed.
+        content_index: i32,
+        /// The final refusal text that was emitted.
+        refusal: String,
+    },
+    /// A streaming event that indicated reasoning text was incrementally added.
+    #[serde(rename = "response.reasoning.delta")]
+    ResponseReasoningDelta {
+        /// The sequence number of the event that was emitted.
+        sequence_number: i32,
+        /// The ID of the item that was updated.
+        item_id: String,
+        /// The index of the output item that was updated.
+        output_index: i32,
+        /// The index of the content part that was updated.
+        content_index: i32,
+        /// The reasoning text delta that was appended.
+        delta: String,
+    },
+    /// A streaming event that indicated reasoning text was completed.
+    #[serde(rename = "response.reasoning.done")]
+    ResponseReasoningDone {
+        /// The sequence number of the event that was emitted.
+        sequence_number: i32,
+        /// The ID of the item that was updated.
+        item_id: String,
+        /// The index of the output item that was updated.
+        output_index: i32,
+        /// The index of the content part that was completed.
+        content_index: i32,
+        /// The final reasoning text that was emitted.
+        text: String,
+    },
+    /// A streaming event that indicated reasoning summary text was incrementally added.
+    #[serde(rename = "response.reasoning_summary_text.delta")]
+    ResponseReasoningSummaryDelta {
+        /// The sequence number of the event that was emitted.
+        sequence_number: i32,
+        /// The ID of the item that was updated.
+        item_id: String,
+        /// The index of the output item that was updated.
+        output_index: i32,
+        /// The index of the summary content that was updated.
+        summary_index: i32,
+        /// The reasoning summary text delta that was appended.
+        delta: String,
+    },
+    /// A streaming event that indicated reasoning summary text was completed.
+    #[serde(rename = "response.reasoning_summary_text.done")]
+    ResponseReasoningSummaryDone {
+        /// The sequence number of the event that was emitted.
+        sequence_number: i32,
+        /// The ID of the item that was updated.
+        item_id: String,
+        /// The index of the output item that was updated.
+        output_index: i32,
+        /// The index of the summary content that was completed.
+        summary_index: i32,
+        /// The final reasoning summary text that was emitted.
+        text: String,
+    },
+    /// A streaming event that indicated an output text annotation was added.
+    #[serde(rename = "response.output_text.annotation.added")]
+    ResponseOutputTextAnnotationAdded {
+        /// The sequence number of the event that was emitted.
+        sequence_number: i32,
+        /// The ID of the item that was updated.
+        item_id: String,
+        /// The index of the output item that was updated.
+        output_index: i32,
+        /// The index of the content part that was updated.
+        content_index: i32,
+        /// The index of the annotation that was added.
+        annotation_index: i32,
+        /// The annotation that was added.
+        annotation: Annotation,
+    },
+    /// A streaming event that indicated function call arguments were incrementally added.
+    #[serde(rename = "response.function_call_arguments.delta")]
+    ResponseFunctionCallArgumentsDelta {
+        /// The sequence number of the event that was emitted.
+        sequence_number: i32,
+        /// The ID of the item that was updated.
+        item_id: String,
+        /// The index of the output item that was updated.
+        output_index: i32,
+        /// The function call arguments delta that was appended.
+        delta: String,
+    },
+    /// A streaming event that indicated function call arguments were completed.
+    #[serde(rename = "response.function_call_arguments.done")]
+    ResponseFunctionCallArgumentsDone {
+        /// The sequence number of the event that was emitted.
+        sequence_number: i32,
+        /// The ID of the item that was updated.
+        item_id: String,
+        /// The index of the output item that was updated.
+        output_index: i32,
+        /// The final function call arguments that were emitted.
+        arguments: String,
+    },
     /// A streaming event that indicated an error was emitted.
     #[serde(rename = "error")]
     Error {
@@ -1104,6 +1256,93 @@ enum KnownStreamingEvent {
         text: String,
         logprobs: Vec<LogProb>,
     },
+    #[serde(rename = "response.reasoning_summary_part.added")]
+    ResponseReasoningSummaryPartAdded {
+        sequence_number: i32,
+        item_id: String,
+        output_index: i32,
+        summary_index: i32,
+        part: MessageContentPart,
+    },
+    #[serde(rename = "response.reasoning_summary_part.done")]
+    ResponseReasoningSummaryPartDone {
+        sequence_number: i32,
+        item_id: String,
+        output_index: i32,
+        summary_index: i32,
+        part: MessageContentPart,
+    },
+    #[serde(rename = "response.refusal.delta")]
+    ResponseRefusalDelta {
+        sequence_number: i32,
+        item_id: String,
+        output_index: i32,
+        content_index: i32,
+        delta: String,
+    },
+    #[serde(rename = "response.refusal.done")]
+    ResponseRefusalDone {
+        sequence_number: i32,
+        item_id: String,
+        output_index: i32,
+        content_index: i32,
+        refusal: String,
+    },
+    #[serde(rename = "response.reasoning.delta")]
+    ResponseReasoningDelta {
+        sequence_number: i32,
+        item_id: String,
+        output_index: i32,
+        content_index: i32,
+        delta: String,
+    },
+    #[serde(rename = "response.reasoning.done")]
+    ResponseReasoningDone {
+        sequence_number: i32,
+        item_id: String,
+        output_index: i32,
+        content_index: i32,
+        text: String,
+    },
+    #[serde(rename = "response.reasoning_summary_text.delta")]
+    ResponseReasoningSummaryDelta {
+        sequence_number: i32,
+        item_id: String,
+        output_index: i32,
+        summary_index: i32,
+        delta: String,
+    },
+    #[serde(rename = "response.reasoning_summary_text.done")]
+    ResponseReasoningSummaryDone {
+        sequence_number: i32,
+        item_id: String,
+        output_index: i32,
+        summary_index: i32,
+        text: String,
+    },
+    #[serde(rename = "response.output_text.annotation.added")]
+    ResponseOutputTextAnnotationAdded {
+        sequence_number: i32,
+        item_id: String,
+        output_index: i32,
+        content_index: i32,
+        annotation_index: i32,
+        annotation: Annotation,
+    },
+    #[serde(rename = "response.function_call_arguments.delta")]
+    ResponseFunctionCallArgumentsDelta {
+        sequence_number: i32,
+        item_id: String,
+        output_index: i32,
+        delta: String,
+    },
+    #[serde(rename = "response.function_call_arguments.done")]
+    ResponseFunctionCallArgumentsDone {
+        sequence_number: i32,
+        item_id: String,
+        output_index: i32,
+        arguments: String,
+    },
     #[serde(rename = "error")]
     Error {
         sequence_number: i32,
@@ -1114,45 +1353,272 @@ enum KnownStreamingEvent {
 impl From<KnownStreamingEvent> for StreamingEvent {
     fn from(known: KnownStreamingEvent) -> Self {
         match known {
-            KnownStreamingEvent::ResponseCreated { sequence_number, response } => {
-                StreamingEvent::ResponseCreated { sequence_number, response }
-            }
-            KnownStreamingEvent::ResponseQueued { sequence_number, response } => {
-                StreamingEvent::ResponseQueued { sequence_number, response }
-            }
-            KnownStreamingEvent::ResponseInProgress { sequence_number, response } => {
-                StreamingEvent::ResponseInProgress { sequence_number, response }
-            }
-            KnownStreamingEvent::ResponseCompleted { sequence_number, response } => {
-                StreamingEvent::ResponseCompleted { sequence_number, response }
-            }
-            KnownStreamingEvent::ResponseFailed { sequence_number, response } => {
-                StreamingEvent::ResponseFailed { sequence_number, response }
-            }
-            KnownStreamingEvent::ResponseIncomplete { sequence_number, response } => {
-                StreamingEvent::ResponseIncomplete { sequence_number, response }
-            }
-            KnownStreamingEvent::ResponseOutputItemAdded { sequence_number, output_index, item } => {
-                StreamingEvent::ResponseOutputItemAdded { sequence_number, output_index, item }
-            }
-            KnownStreamingEvent::ResponseOutputItemDone { sequence_number, output_index, item } => {
-                StreamingEvent::ResponseOutputItemDone { sequence_number, output_index, item }
-            }
-            KnownStreamingEvent::ResponseContentPartAdded { sequence_number, item_id, output_index, content_index, part } => {
-                StreamingEvent::ResponseContentPartAdded { sequence_number, item_id, output_index, content_index, part }
-            }
-            KnownStreamingEvent::ResponseContentPartDone { sequence_number, item_id, output_index, content_index, part } => {
-                StreamingEvent::ResponseContentPartDone { sequence_number, item_id, output_index, content_index, part }
-            }
-            KnownStreamingEvent::ResponseOutputTextDelta { sequence_number, item_id, output_index, content_index, delta, logprobs, obfuscation } => {
-                StreamingEvent::ResponseOutputTextDelta { sequence_number, item_id, output_index, content_index, delta, logprobs, obfuscation }
-            }
-            KnownStreamingEvent::ResponseOutputTextDone { sequence_number, item_id, output_index, content_index, text, logprobs } => {
-                StreamingEvent::ResponseOutputTextDone { sequence_number, item_id, output_index, content_index, text, logprobs }
-            }
-            KnownStreamingEvent::Error { sequence_number, error } => {
-                StreamingEvent::Error { sequence_number, error }
-            }
+            KnownStreamingEvent::ResponseCreated {
+                sequence_number,
+                response,
+            } => StreamingEvent::ResponseCreated {
+                sequence_number,
+                response,
+            },
+            KnownStreamingEvent::ResponseQueued {
+                sequence_number,
+                response,
+            } => StreamingEvent::ResponseQueued {
+                sequence_number,
+                response,
+            },
+            KnownStreamingEvent::ResponseInProgress {
+                sequence_number,
+                response,
+            } => StreamingEvent::ResponseInProgress {
+                sequence_number,
+                response,
+            },
+            KnownStreamingEvent::ResponseCompleted {
+                sequence_number,
+                response,
+            } => StreamingEvent::ResponseCompleted {
+                sequence_number,
+                response,
+            },
+            KnownStreamingEvent::ResponseFailed {
+                sequence_number,
+                response,
+            } => StreamingEvent::ResponseFailed {
+                sequence_number,
+                response,
+            },
+            KnownStreamingEvent::ResponseIncomplete {
+                sequence_number,
+                response,
+            } => StreamingEvent::ResponseIncomplete {
+                sequence_number,
+                response,
+            },
+            KnownStreamingEvent::ResponseOutputItemAdded {
+                sequence_number,
+                output_index,
+                item,
+            } => StreamingEvent::ResponseOutputItemAdded {
+                sequence_number,
+                output_index,
+                item,
+            },
+            KnownStreamingEvent::ResponseOutputItemDone {
+                sequence_number,
+                output_index,
+                item,
+            } => StreamingEvent::ResponseOutputItemDone {
+                sequence_number,
+                output_index,
+                item,
+            },
+            KnownStreamingEvent::ResponseContentPartAdded {
+                sequence_number,
+                item_id,
+                output_index,
+                content_index,
+                part,
+            } => StreamingEvent::ResponseContentPartAdded {
+                sequence_number,
+                item_id,
+                output_index,
+                content_index,
+                part,
+            },
+            KnownStreamingEvent::ResponseContentPartDone {
+                sequence_number,
+                item_id,
+                output_index,
+                content_index,
+                part,
+            } => StreamingEvent::ResponseContentPartDone {
+                sequence_number,
+                item_id,
+                output_index,
+                content_index,
+                part,
+            },
+            KnownStreamingEvent::ResponseOutputTextDelta {
+                sequence_number,
+                item_id,
+                output_index,
+                content_index,
+                delta,
+                logprobs,
+                obfuscation,
+            } => StreamingEvent::ResponseOutputTextDelta {
+                sequence_number,
+                item_id,
+                output_index,
+                content_index,
+                delta,
+                logprobs,
+                obfuscation,
+            },
+            KnownStreamingEvent::ResponseOutputTextDone {
+                sequence_number,
+                item_id,
+                output_index,
+                content_index,
+                text,
+                logprobs,
+            } => StreamingEvent::ResponseOutputTextDone {
+                sequence_number,
+                item_id,
+                output_index,
+                content_index,
+                text,
+                logprobs,
+            },
+            KnownStreamingEvent::ResponseReasoningSummaryPartAdded {
+                sequence_number,
+                item_id,
+                output_index,
+                summary_index,
+                part,
+            } => StreamingEvent::ResponseReasoningSummaryPartAdded {
+                sequence_number,
+                item_id,
+                output_index,
+                summary_index,
+                part,
+            },
+            KnownStreamingEvent::ResponseReasoningSummaryPartDone {
+                sequence_number,
+                item_id,
+                output_index,
+                summary_index,
+                part,
+            } => StreamingEvent::ResponseReasoningSummaryPartDone {
+                sequence_number,
+                item_id,
+                output_index,
+                summary_index,
+                part,
+            },
+            KnownStreamingEvent::ResponseRefusalDelta {
+                sequence_number,
+                item_id,
+                output_index,
+                content_index,
+                delta,
+            } => StreamingEvent::ResponseRefusalDelta {
+                sequence_number,
+                item_id,
+                output_index,
+                content_index,
+                delta,
+            },
+            KnownStreamingEvent::ResponseRefusalDone {
+                sequence_number,
+                item_id,
+                output_index,
+                content_index,
+                refusal,
+            } => StreamingEvent::ResponseRefusalDone {
+                sequence_number,
+                item_id,
+                output_index,
+                content_index,
+                refusal,
+            },
+            KnownStreamingEvent::ResponseReasoningDelta {
+                sequence_number,
+                item_id,
+                output_index,
+                content_index,
+                delta,
+            } => StreamingEvent::ResponseReasoningDelta {
+                sequence_number,
+                item_id,
+                output_index,
+                content_index,
+                delta,
+            },
+            KnownStreamingEvent::ResponseReasoningDone {
+                sequence_number,
+                item_id,
+                output_index,
+                content_index,
+                text,
+            } => StreamingEvent::ResponseReasoningDone {
+                sequence_number,
+                item_id,
+                output_index,
+                content_index,
+                text,
+            },
+            KnownStreamingEvent::ResponseReasoningSummaryDelta {
+                sequence_number,
+                item_id,
+                output_index,
+                summary_index,
+                delta,
+            } => StreamingEvent::ResponseReasoningSummaryDelta {
+                sequence_number,
+                item_id,
+                output_index,
+                summary_index,
+                delta,
+            },
+            KnownStreamingEvent::ResponseReasoningSummaryDone {
+                sequence_number,
+                item_id,
+                output_index,
+                summary_index,
+                text,
+            } => StreamingEvent::ResponseReasoningSummaryDone {
+                sequence_number,
+                item_id,
+                output_index,
+                summary_index,
+                text,
+            },
+            KnownStreamingEvent::ResponseOutputTextAnnotationAdded {
+                sequence_number,
+                item_id,
+                output_index,
+                content_index,
+                annotation_index,
+                annotation,
+            } => StreamingEvent::ResponseOutputTextAnnotationAdded {
+                sequence_number,
+                item_id,
+                output_index,
+                content_index,
+                annotation_index,
+                annotation,
+            },
+            KnownStreamingEvent::ResponseFunctionCallArgumentsDelta {
+                sequence_number,
+                item_id,
+                output_index,
+                delta,
+            } => StreamingEvent::ResponseFunctionCallArgumentsDelta {
+                sequence_number,
+                item_id,
+                output_index,
+                delta,
+            },
+            KnownStreamingEvent::ResponseFunctionCallArgumentsDone {
+                sequence_number,
+                item_id,
+                output_index,
+                arguments,
+            } => StreamingEvent::ResponseFunctionCallArgumentsDone {
+                sequence_number,
+                item_id,
+                output_index,
+                arguments,
+            },
+            KnownStreamingEvent::Error {
+                sequence_number,
+                error,
+            } => StreamingEvent::Error {
+                sequence_number,
+                error,
+            },
         }
     }
 }
@@ -1169,10 +1635,7 @@ impl<'de> Deserialize<'de> for StreamingEvent {
             Err(known_err) => {
                 // Determine whether this is a truly unknown type or a known type
                 // that failed field validation.
-                let event_type = value
-                    .get("type")
-                    .and_then(|v| v.as_str())
-                    .unwrap_or("");
+                let event_type = value.get("type").and_then(|v| v.as_str()).unwrap_or("");
 
                 if is_known_event_type(event_type) {
                     // Known type, but required fields are missing/wrong — real error.
@@ -1204,6 +1667,17 @@ fn is_known_event_type(ty: &str) -> bool {
             | "response.content_part.done"
             | "response.output_text.delta"
             | "response.output_text.done"
+            | "response.reasoning_summary_part.added"
+            | "response.reasoning_summary_part.done"
+            | "response.refusal.delta"
+            | "response.refusal.done"
+            | "response.reasoning.delta"
+            | "response.reasoning.done"
+            | "response.reasoning_summary_text.delta"
+            | "response.reasoning_summary_text.done"
+            | "response.output_text.annotation.added"
+            | "response.function_call_arguments.delta"
+            | "response.function_call_arguments.done"
             | "error"
     )
 }
@@ -1276,11 +1750,11 @@ mod tests {
 
     #[test]
     fn unknown_event_type_deserializes() {
-        let json = r#"{"type":"response.reasoning.delta","sequence_number":5,"content":"thinking..."}"#;
+        let json = r#"{"type":"response.new_type","sequence_number":5,"content":"thinking..."}"#;
         let event: StreamingEvent = serde_json::from_str(json).unwrap();
         match event {
             StreamingEvent::Unknown(ref u) => {
-                assert_eq!(u.event_type, "response.reasoning.delta");
+                assert_eq!(u.event_type, "response.new_type");
                 assert_eq!(
                     u.payload.get("sequence_number").unwrap(),
                     &serde_json::json!(5)
@@ -1317,6 +1791,41 @@ mod tests {
     }
 
     #[test]
+    fn reasoning_delta_event_deserializes() {
+        let json = serde_json::json!({
+            "type": "response.reasoning.delta",
+            "sequence_number": 9,
+            "item_id": "rs_123",
+            "output_index": 0,
+            "content_index": 1,
+            "delta": "thinking"
+        });
+        let event: StreamingEvent = serde_json::from_value(json).unwrap();
+        match event {
+            StreamingEvent::ResponseReasoningDelta { delta, .. } => assert_eq!(delta, "thinking"),
+            other => panic!("expected ResponseReasoningDelta, got: {other:?}"),
+        }
+    }
+
+    #[test]
+    fn function_call_arguments_done_event_deserializes() {
+        let json = serde_json::json!({
+            "type": "response.function_call_arguments.done",
+            "sequence_number": 4,
+            "item_id": "fc_123",
+            "output_index": 0,
+            "arguments": "{\"city\":\"Berlin\"}"
+        });
+        let event: StreamingEvent = serde_json::from_value(json).unwrap();
+        match event {
+            StreamingEvent::ResponseFunctionCallArgumentsDone { arguments, .. } => {
+                assert_eq!(arguments, "{\"city\":\"Berlin\"}")
+            }
+            other => panic!("expected ResponseFunctionCallArgumentsDone, got: {other:?}"),
+        }
+    }
+
+    #[test]
     fn unknown_event_round_trips() {
         let json = r#"{"type":"response.new_thing","seq":42,"nested":{"a":1}}"#;
         let event: StreamingEvent = serde_json::from_str(json).unwrap();
@@ -1350,7 +1859,10 @@ mod tests {
             // missing: output_index, content_index, delta, logprobs
         });
         let result = serde_json::from_value::<StreamingEvent>(json);
-        assert!(result.is_err(), "expected error for known type with missing fields");
+        assert!(
+            result.is_err(),
+            "expected error for known type with missing fields"
+        );
         let err_msg = result.unwrap_err().to_string();
         assert!(
             err_msg.contains("missing field"),
