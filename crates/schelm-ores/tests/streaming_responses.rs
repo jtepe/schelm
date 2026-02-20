@@ -55,10 +55,7 @@ async fn send_stream_happy_path() {
         .and(path("/responses"))
         .and(header("accept", "text/event-stream"))
         .and(body_partial_json(serde_json::json!({ "stream": true })))
-        .respond_with(
-            ResponseTemplate::new(200)
-                .set_body_raw(body, "text/event-stream"),
-        )
+        .respond_with(ResponseTemplate::new(200).set_body_raw(body, "text/event-stream"))
         .expect(1)
         .mount(&server)
         .await;
@@ -105,10 +102,7 @@ async fn send_stream_rejects_wrong_content_type() {
 
     Mock::given(method("POST"))
         .and(path("/responses"))
-        .respond_with(
-            ResponseTemplate::new(200)
-                .set_body_raw("{}", "application/json"),
-        )
+        .respond_with(ResponseTemplate::new(200).set_body_raw("{}", "application/json"))
         .expect(1)
         .mount(&server)
         .await;

@@ -553,9 +553,9 @@ mod tests {
     // -----------------------------------------------------------------------
 
     #[tokio::test]
-    async fn unknown_event_type_does_not_kill_stream() {
+    async fn unsupported_event_type_does_not_kill_stream() {
         let unknown_json = serde_json::json!({
-            "type": "response.reasoning.delta",
+            "type": "response.new_unknown.delta",
             "sequence_number": 0,
             "content": "thinking"
         })
@@ -563,7 +563,7 @@ mod tests {
 
         let body = format!(
             "{}{}{}",
-            sse_frame(Some("response.reasoning.delta"), &unknown_json),
+            sse_frame(Some("response.new_unknown.delta"), &unknown_json),
             sse_frame(
                 Some("response.output_text.delta"),
                 &text_delta_json(1, "Hello"),
@@ -580,7 +580,7 @@ mod tests {
         // First event should be Unknown
         match events[0].as_ref().unwrap() {
             StreamingEvent::Unknown(u) => {
-                assert_eq!(u.event_type, "response.reasoning.delta");
+                assert_eq!(u.event_type, "response.new_unknown.delta");
                 assert_eq!(
                     u.payload.get("content").unwrap(),
                     &serde_json::json!("thinking")
