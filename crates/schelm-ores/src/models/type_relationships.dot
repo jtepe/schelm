@@ -415,6 +415,17 @@ ResponseContentPartAdded { part }<BR ALIGN="LEFT"/>
 ResponseContentPartDone { part }<BR ALIGN="LEFT"/>
 ResponseOutputTextDelta { delta, logprobs }<BR ALIGN="LEFT"/>
 ResponseOutputTextDone { text, logprobs }<BR ALIGN="LEFT"/>
+ResponseReasoningSummaryPartAdded { part }<BR ALIGN="LEFT"/>
+ResponseReasoningSummaryPartDone { part }<BR ALIGN="LEFT"/>
+ResponseRefusalDelta { delta }<BR ALIGN="LEFT"/>
+ResponseRefusalDone { refusal }<BR ALIGN="LEFT"/>
+ResponseReasoningDelta { delta }<BR ALIGN="LEFT"/>
+ResponseReasoningDone { text }<BR ALIGN="LEFT"/>
+ResponseReasoningSummaryDelta { delta }<BR ALIGN="LEFT"/>
+ResponseReasoningSummaryDone { text }<BR ALIGN="LEFT"/>
+ResponseOutputTextAnnotationAdded { annotation }<BR ALIGN="LEFT"/>
+ResponseFunctionCallArgumentsDelta { delta }<BR ALIGN="LEFT"/>
+ResponseFunctionCallArgumentsDone { arguments }<BR ALIGN="LEFT"/>
 Error { error }<BR ALIGN="LEFT"/>
 </FONT></TD></TR>
 </TABLE>>];
@@ -1080,6 +1091,7 @@ headers : Map&lt;String, String&gt;?<BR ALIGN="LEFT"/>
     StreamingEvent -> ResponseResource [style=dashed, color="#0891B2", constraint=false];
     StreamingEvent -> ItemField [style=dashed, color="#0891B2", constraint=false];
     StreamingEvent -> MessageContentPart [style=dashed, color="#0891B2", constraint=false];
+    StreamingEvent -> Annotation [style=dashed, color="#0891B2", constraint=false];
     StreamingEvent -> LogProb [style=dashed, color="#0891B2", constraint=false];
     StreamingEvent -> ErrorPayload [weight=5, color="#0891B2"];
 
@@ -1113,11 +1125,11 @@ headers : Map&lt;String, String&gt;?<BR ALIGN="LEFT"/>
     {rank=same; InputTextContent; OutputTextContent; TextContent; SummaryTextContent; ReasoningTextContent; RefusalContent; InputImageContent; InputFileContent;}
 
     // Annotations and logprobs
-    {rank=same; Annotation; LogProb; UrlCitationParam;}
+    {rank=same; UrlCitationParam;}
     {rank=same; UrlCitationBody; TopLogProb;}
 
     // Streaming at the bottom
-    {rank=same; StreamingEvent; ErrorPayload;}
+    {rank=same; StreamingEvent; Annotation; LogProb; ErrorPayload;}
 
     // Token details together
     {rank=same; InputTokensDetails; OutputTokensDetails;}
