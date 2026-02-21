@@ -1060,7 +1060,7 @@ pub enum StreamingEvent {
         refusal: String,
     },
     /// A streaming event that indicated reasoning text was incrementally added.
-    #[serde(rename = "response.reasoning.delta")]
+    #[serde(rename = "response.reasoning_text.delta")]
     ResponseReasoningDelta {
         /// The sequence number of the event that was emitted.
         sequence_number: i32,
@@ -1074,7 +1074,7 @@ pub enum StreamingEvent {
         delta: String,
     },
     /// A streaming event that indicated reasoning text was completed.
-    #[serde(rename = "response.reasoning.done")]
+    #[serde(rename = "response.reasoning_text.done")]
     ResponseReasoningDone {
         /// The sequence number of the event that was emitted.
         sequence_number: i32,
@@ -1288,7 +1288,7 @@ enum KnownStreamingEvent {
         content_index: i32,
         refusal: String,
     },
-    #[serde(rename = "response.reasoning.delta")]
+    #[serde(rename = "response.reasoning_text.delta")]
     ResponseReasoningDelta {
         sequence_number: i32,
         item_id: String,
@@ -1296,7 +1296,7 @@ enum KnownStreamingEvent {
         content_index: i32,
         delta: String,
     },
-    #[serde(rename = "response.reasoning.done")]
+    #[serde(rename = "response.reasoning_text.done")]
     ResponseReasoningDone {
         sequence_number: i32,
         item_id: String,
@@ -1671,8 +1671,8 @@ fn is_known_event_type(ty: &str) -> bool {
             | "response.reasoning_summary_part.done"
             | "response.refusal.delta"
             | "response.refusal.done"
-            | "response.reasoning.delta"
-            | "response.reasoning.done"
+            | "response.reasoning_text.delta"
+            | "response.reasoning_text.done"
             | "response.reasoning_summary_text.delta"
             | "response.reasoning_summary_text.done"
             | "response.output_text.annotation.added"
@@ -1685,7 +1685,7 @@ fn is_known_event_type(ty: &str) -> bool {
 /// An unknown streaming event type not recognized by this version of the SDK.
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct UnknownEvent {
-    /// The event type string from the server (e.g., `"response.reasoning.delta"`).
+    /// The event type string from the server (e.g., `"response.some_future_event"`).
     #[serde(rename = "type")]
     pub event_type: String,
     /// The remaining JSON fields from the event payload (excludes the `"type"` field).
@@ -1793,7 +1793,7 @@ mod tests {
     #[test]
     fn reasoning_delta_event_deserializes() {
         let json = serde_json::json!({
-            "type": "response.reasoning.delta",
+            "type": "response.reasoning_text.delta",
             "sequence_number": 9,
             "item_id": "rs_123",
             "output_index": 0,
