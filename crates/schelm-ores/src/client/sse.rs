@@ -259,7 +259,7 @@ impl Stream for ResponseEventStream {
             }
 
             // Need more data — poll the inner stream
-            match Pin::new(&mut this.inner).poll_next(cx) {
+            match this.inner.as_mut().poll_next(cx) {
                 Poll::Ready(Some(Ok(chunk))) => {
                     this.buf.extend_from_slice(&chunk);
 
