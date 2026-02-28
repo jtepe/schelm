@@ -9,6 +9,7 @@ on:
     branches: [main]
 
 env:
+  RUSTFLAGS: "-Dwarnings"
   RUST_BACKTRACE: 1
   CARGO_TERM_COLOR: always
 
@@ -22,10 +23,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Install Rust toolchain
         run: rustup update stable
-
       - name: Cache Cargo registry and build artifacts
         uses: actions/cache@v5
         with:
@@ -36,6 +35,37 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-
-
       - name: Run tests with all features
         run: cargo test --release --features client
+
+  fmt:
+     name: Rustfmt
+     runs-on: ubuntu-latest
+     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install Rust toolchain
+        run: rustup update stable
+      - name: Format check
+        run: cargo fmt --all --check
+
+  clippy:
+    name: Clippy
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Install Rust toolchain
+      run: rustup update stable
+    - name: Cache Cargo registry and build artifacts
+      uses: actions/cache@v5
+      with:
+        path: |
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-
+    - name: Linting
+      run: cargo clippy --all-targets --features client
