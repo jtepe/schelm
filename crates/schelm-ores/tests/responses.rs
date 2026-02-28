@@ -1,4 +1,4 @@
-mod common;
+pub mod common;
 
 use wiremock::matchers::{bearer_token, body_partial_json, header, method, path};
 use wiremock::{Mock, ResponseTemplate};
