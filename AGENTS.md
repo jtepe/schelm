@@ -5,7 +5,7 @@ The purpose is to provide all the tools necessary to develop AI agents.
 
 ## Crates
 
-* [./crates/schelm-ores] : OpenResponses Rust SDK
+* [./crates/schelm-http] : Protocol level LLM API implementation
 
 ## Development Instructions
 

@@ -1,5 +1,5 @@
 [package]
-name = "schelm-ores"
+name = "schelm-http"
 version.workspace = true
 edition.workspace = true
 description = "Schelm's OpenResponses Rust SDK"
