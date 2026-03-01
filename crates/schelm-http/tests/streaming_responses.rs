@@ -6,13 +6,13 @@ use futures_core::Stream;
 use wiremock::matchers::{body_partial_json, header, method, path};
 use wiremock::{Mock, ResponseTemplate};
 
-use schelm_ores::client::{Error, ResponseEventStream, StreamingError};
-use schelm_ores::models::responses::StreamingEvent;
+use schelm_http::client::{Error, ResponseEventStream, StreamingError};
+use schelm_http::models::responses::StreamingEvent;
 
 /// Helper to pull the next item from a `ResponseEventStream`.
 async fn next(
     stream: &mut ResponseEventStream,
-) -> Option<schelm_ores::client::Result<StreamingEvent>> {
+) -> Option<schelm_http::client::Result<StreamingEvent>> {
     std::future::poll_fn(|cx| Pin::new(&mut *stream).poll_next(cx)).await
 }
 
