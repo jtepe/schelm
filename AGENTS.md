@@ -10,6 +10,8 @@ The purpose is to provide all the tools necessary to develop AI agents.
 ## Development Instructions
 
 Always run these commands after editing code to ensure the code base stays clean and in a
-runnable state.
-* `just check` : runs static checks, linting, and formats code
-* `just test` : runs all test cases
+good state.
+* `cargo fmt --all` : apply formatting rules
+* `cargo clippy --all-targets --features client` : lint code
+* `cargo check -q --features client` : runs static checks
+* `RUST_LOG=off cargo test -q --features client` : runs all test cases
