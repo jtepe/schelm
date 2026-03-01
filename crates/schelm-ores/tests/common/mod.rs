@@ -13,7 +13,7 @@ pub async fn mock_server() -> MockServer {
 /// server so that all HTTP traffic stays local.
 pub fn test_client(server: &MockServer) -> schelm_ores::client::Client {
     let base_url = url::Url::parse(&server.uri()).expect("mock server URI should be a valid URL");
-    schelm_ores::client::Client::builder("test-api-key", base_url)
+    schelm_ores::client::ClientBuilder::responses("test-api-key", base_url)
         .build()
         .expect("client builder should not fail with valid inputs")
 }
