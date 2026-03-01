@@ -7,7 +7,7 @@ use wiremock::matchers::{body_partial_json, header, method, path};
 use wiremock::{Mock, ResponseTemplate};
 
 use schelm_ores::client::{Error, ResponseEventStream, StreamingError};
-use schelm_ores::models::StreamingEvent;
+use schelm_ores::models::responses::StreamingEvent;
 
 /// Helper to pull the next item from a `ResponseEventStream`.
 async fn next(
