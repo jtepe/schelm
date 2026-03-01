@@ -96,8 +96,17 @@ pub(crate) fn extract_frame(buf: &[u8]) -> Option<(SseFrame, usize)> {
 /// A raw SSE byte-stream reader that buffers incoming chunks and yields
 /// parsed [`SseFrame`]s. Handles max-size enforcement and `[DONE]` termination.
 ///
-/// Endpoint-specific stream types wrap this to decode frames into their own
-/// event types.
+/// Implements [`Stream`] so that endpoint-specific stream types can drive it
+/// with standard combinators or manual polling.
+///
+/// # `Stream` return values
+///
+/// - `Poll::Ready(Some(Ok(frame)))` — a complete, non-empty SSE frame is available.
+/// - `Poll::Ready(Some(Err(e)))` — a fatal error occurred (transport failure or
+///   [`EventTooLarge`](StreamingError::EventTooLarge)).
+/// - `Poll::Ready(None)` — the stream has ended, either via a `[DONE]` sentinel,
+///   end-of-body, or a previous fatal error (the reader is fused after error).
+/// - `Poll::Pending` — no data available yet; the waker has been registered.
 pub(crate) struct SseReader {
     inner: Pin<Box<dyn Stream<Item = std::result::Result<Bytes, reqwest::Error>> + Send>>,
     buf: Vec<u8>,
@@ -131,23 +140,22 @@ impl SseReader {
             done: false,
         }
     }
+}
 
-    /// Polls for the next SSE frame from the underlying byte stream.
-    ///
-    /// Returns `Poll::Ready(Some(Ok(frame)))` when a complete frame is available,
-    /// `Poll::Ready(None)` on `[DONE]` or stream end, or an error on failures.
-    pub(crate) fn poll_next_frame(
-        &mut self,
-        cx: &mut Context<'_>,
-    ) -> Poll<Option<Result<SseFrame>>> {
-        if self.done {
+impl Stream for SseReader {
+    type Item = Result<SseFrame>;
+
+    fn poll_next(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
+        let this = self.get_mut();
+
+        if this.done {
             return Poll::Ready(None);
         }
 
         loop {
             // Try to extract a frame from the buffer first
-            if let Some((frame, consumed)) = extract_frame(&self.buf) {
-                self.buf.drain(..consumed);
+            if let Some((frame, consumed)) = extract_frame(&this.buf) {
+                this.buf.drain(..consumed);
 
                 // Skip empty keepalive frames
                 if frame.data.is_empty() && frame.event.is_none() {
@@ -156,7 +164,7 @@ impl SseReader {
 
                 // Check for [DONE] termination
                 if frame.data == "[DONE]" {
-                    self.done = true;
+                    this.done = true;
                     return Poll::Ready(None);
                 }
 
@@ -164,13 +172,13 @@ impl SseReader {
             }
 
             // Need more data — poll the inner stream
-            match self.inner.as_mut().poll_next(cx) {
+            match this.inner.as_mut().poll_next(cx) {
                 Poll::Ready(Some(Ok(chunk))) => {
-                    self.buf.extend_from_slice(&chunk);
+                    this.buf.extend_from_slice(&chunk);
 
                     // Safety limit check
-                    if self.buf.len() > MAX_EVENT_BYTES {
-                        self.done = true;
+                    if this.buf.len() > MAX_EVENT_BYTES {
+                        this.done = true;
                         return Poll::Ready(Some(Err(StreamingError::EventTooLarge {
                             limit_bytes: MAX_EVENT_BYTES,
                         }
@@ -180,12 +188,12 @@ impl SseReader {
                     // Loop back to try frame extraction
                 }
                 Poll::Ready(Some(Err(e))) => {
-                    self.done = true;
+                    this.done = true;
                     return Poll::Ready(Some(Err(e.into())));
                 }
                 Poll::Ready(None) => {
-                    // Stream ended — check if there's remaining data without termination
-                    self.done = true;
+                    // Stream ended without [DONE]
+                    this.done = true;
                     return Poll::Ready(None);
                 }
                 Poll::Pending => return Poll::Pending,

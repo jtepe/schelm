@@ -76,13 +76,13 @@ impl ClientBuilder {
     }
 
     /// Overrides the default auth scheme to use `Authorization: Bearer`.
-    pub fn auth_scheme_bearer(mut self) -> Self {
+    pub fn auth_bearer(mut self) -> Self {
         self.auth_scheme = AuthScheme::Bearer;
         self
     }
 
     /// Overrides the default auth scheme to use `x-api-key` header.
-    pub fn auth_scheme_x_api_key(mut self) -> Self {
+    pub fn auth_x_api_key(mut self) -> Self {
         self.auth_scheme = AuthScheme::XApiKey;
         self
     }

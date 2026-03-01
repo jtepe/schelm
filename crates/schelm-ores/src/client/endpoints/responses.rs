@@ -321,7 +321,7 @@ impl Stream for ResponseEventStream {
         let this = self.get_mut();
 
         loop {
-            match this.reader.poll_next_frame(cx) {
+            match Pin::new(&mut this.reader).poll_next(cx) {
                 Poll::Ready(Some(Ok(frame))) => {
                     match decode_frame(frame) {
                         Ok(Some(event)) => return Poll::Ready(Some(Ok(event))),
