@@ -1,68 +1,77 @@
-//! Builder for [`Client`] with provider presets and custom configuration.
+//! Builder for [`Client`] with provider presets.
 
-use crate::client::{Client, Error, Result, http};
+use std::marker::PhantomData;
+
+use reqwest::header::{AUTHORIZATION, CONTENT_TYPE, HeaderMap, HeaderValue};
+
+use crate::client::{Client, Error, MessagesApi, ResponsesApi, Result, http};
 
 /// Builder for [`Client`].
 ///
-/// Use one of the provider presets ([`responses`](Self::responses),
-/// [`messages`](Self::messages)) or the generic [`custom`](Self::custom)
-/// constructor to get started. Each preset applies sensible defaults for
-/// authentication headers, content-type, etc.
+/// Use [`responses`](Self::responses) or [`messages`](Self::messages) to
+/// construct a builder for the desired API surface. The type parameter is
+/// carried through to the resulting [`Client`], restricting which endpoint
+/// methods are available at compile time.
 #[derive(Debug)]
-pub struct ClientBuilder {
+pub struct ClientBuilder<A> {
     api_key: String,
     base_url: url::Url,
     timeout: Option<std::time::Duration>,
     user_agent: Option<String>,
-    auth_scheme: AuthScheme,
+    _api: PhantomData<A>,
 }
 
-/// Controls how the API key is sent in HTTP requests.
-#[derive(Debug, Clone)]
-enum AuthScheme {
-    /// `Authorization: Bearer <key>`
-    Bearer,
-    /// `x-api-key: <key>`
-    XApiKey,
-}
-
-impl ClientBuilder {
+impl ClientBuilder<ResponsesApi> {
     /// Creates a builder pre-configured for the **Responses** API.
     ///
-    /// Defaults:
-    /// - `Authorization: Bearer <api_key>`
-    /// - `Content-Type: application/json`
+    /// The resulting client uses `Authorization: Bearer <api_key>` and
+    /// only exposes the `.responses()` endpoint group.
     pub fn responses(api_key: impl Into<String>, base_url: url::Url) -> Self {
-        Self::new(api_key, base_url, AuthScheme::Bearer)
-    }
-
-    /// Creates a builder pre-configured for the **Messages** API.
-    ///
-    /// Defaults:
-    /// - `x-api-key: <api_key>`
-    /// - `Content-Type: application/json`
-    pub fn messages(api_key: impl Into<String>, base_url: url::Url) -> Self {
-        Self::new(api_key, base_url, AuthScheme::XApiKey)
-    }
-
-    /// Creates a builder with explicit control over the auth scheme.
-    ///
-    /// This generic path allows future providers to be added without another
-    /// builder redesign.
-    pub fn custom(api_key: impl Into<String>, base_url: url::Url) -> Self {
-        Self::new(api_key, base_url, AuthScheme::Bearer)
-    }
-
-    fn new(api_key: impl Into<String>, base_url: url::Url, auth_scheme: AuthScheme) -> Self {
         Self {
             api_key: api_key.into(),
             base_url: http::normalize_base_url(base_url),
             timeout: None,
             user_agent: None,
-            auth_scheme,
+            _api: PhantomData,
         }
     }
 
+    /// Builds the client with `Authorization: Bearer` authentication.
+    pub fn build(self) -> Result<Client<ResponsesApi>> {
+        let mut headers = HeaderMap::new();
+        let auth_value = HeaderValue::from_str(&format!("Bearer {}", self.api_key))
+            .map_err(|e| Error::InvalidHeaderValue(e.to_string()))?;
+        headers.insert(AUTHORIZATION, auth_value);
+        self.build_with_headers(headers)
+    }
+}
+
+impl ClientBuilder<MessagesApi> {
+    /// Creates a builder pre-configured for the **Messages** API.
+    ///
+    /// The resulting client uses `x-api-key: <api_key>` and only exposes
+    /// the `.messages()` endpoint group.
+    pub fn messages(api_key: impl Into<String>, base_url: url::Url) -> Self {
+        Self {
+            api_key: api_key.into(),
+            base_url: http::normalize_base_url(base_url),
+            timeout: None,
+            user_agent: None,
+            _api: PhantomData,
+        }
+    }
+
+    /// Builds the client with `x-api-key` authentication.
+    pub fn build(self) -> Result<Client<MessagesApi>> {
+        let mut headers = HeaderMap::new();
+        let auth_value = HeaderValue::from_str(&self.api_key)
+            .map_err(|e| Error::InvalidHeaderValue(e.to_string()))?;
+        headers.insert("x-api-key", auth_value);
+        self.build_with_headers(headers)
+    }
+}
+
+impl<A> ClientBuilder<A> {
     /// Sets a request timeout applied to all requests.
     pub fn timeout(mut self, timeout: std::time::Duration) -> Self {
         self.timeout = Some(timeout);
@@ -75,39 +84,9 @@ impl ClientBuilder {
         self
     }
 
-    /// Overrides the default auth scheme to use `Authorization: Bearer`.
-    pub fn auth_bearer(mut self) -> Self {
-        self.auth_scheme = AuthScheme::Bearer;
-        self
-    }
-
-    /// Overrides the default auth scheme to use `x-api-key` header.
-    pub fn auth_x_api_key(mut self) -> Self {
-        self.auth_scheme = AuthScheme::XApiKey;
-        self
-    }
-
-    /// Builds the client.
-    pub fn build(self) -> Result<Client> {
-        use reqwest::header::{AUTHORIZATION, CONTENT_TYPE, HeaderMap, HeaderValue};
-
-        let mut headers = HeaderMap::new();
-
-        // Apply auth based on the chosen scheme
-        match self.auth_scheme {
-            AuthScheme::Bearer => {
-                let auth_value = HeaderValue::from_str(&format!("Bearer {}", self.api_key))
-                    .map_err(|e| Error::InvalidHeaderValue(e.to_string()))?;
-                headers.insert(AUTHORIZATION, auth_value);
-            }
-            AuthScheme::XApiKey => {
-                let auth_value = HeaderValue::from_str(&self.api_key)
-                    .map_err(|e| Error::InvalidHeaderValue(e.to_string()))?;
-                headers.insert("x-api-key", auth_value);
-            }
-        }
-
-        // Default Content-Type
+    /// Shared build logic: applies content-type, timeout, user-agent, and
+    /// constructs the underlying `reqwest::Client`.
+    fn build_with_headers(self, mut headers: HeaderMap) -> Result<Client<A>> {
         headers.insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
 
         let mut builder = reqwest::Client::builder().default_headers(headers);
@@ -124,6 +103,7 @@ impl ClientBuilder {
         Ok(Client {
             base_url: self.base_url,
             http,
+            _api: PhantomData,
         })
     }
 }
