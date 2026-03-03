@@ -9,9 +9,11 @@ pub async fn mock_server() -> MockServer {
     MockServer::builder().start().await
 }
 
-/// Builds an [`ores::client::Client`] whose base URL points at the given mock
+/// Builds a [`Client<ResponsesApi>`] whose base URL points at the given mock
 /// server so that all HTTP traffic stays local.
-pub fn test_client(server: &MockServer) -> schelm_http::client::Client {
+pub fn test_client(
+    server: &MockServer,
+) -> schelm_http::client::Client<schelm_http::client::ResponsesApi> {
     let base_url = url::Url::parse(&server.uri()).expect("mock server URI should be a valid URL");
     schelm_http::client::ClientBuilder::responses("test-api-key", base_url)
         .build()

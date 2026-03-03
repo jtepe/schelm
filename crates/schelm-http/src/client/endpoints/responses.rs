@@ -5,7 +5,7 @@
 
 use crate::client::endpoints::sse_core::{SseFrame, SseReader};
 use crate::client::error::StreamingError;
-use crate::client::{Client, Result, http};
+use crate::client::{Client, ResponsesApi, Result, http};
 use crate::models::responses;
 
 use futures_core::Stream;
@@ -20,11 +20,11 @@ use std::task::{Context, Poll};
 /// Responses endpoint group.
 #[derive(Clone, Copy, Debug)]
 pub struct Responses<'a> {
-    client: &'a Client,
+    client: &'a Client<ResponsesApi>,
 }
 
 impl<'a> Responses<'a> {
-    pub(crate) fn new(client: &'a Client) -> Self {
+    pub(crate) fn new(client: &'a Client<ResponsesApi>) -> Self {
         Self { client }
     }
 
@@ -86,7 +86,7 @@ impl<'a> Responses<'a> {
 /// Request builder for `POST /responses`.
 #[derive(Debug)]
 pub struct CreateResponseRequestBuilder<'a> {
-    client: &'a Client,
+    client: &'a Client<ResponsesApi>,
     body: responses::CreateResponseBody,
 }
 
