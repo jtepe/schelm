@@ -1,5 +1,6 @@
 pub mod common;
 
+use schelm_http::client::{Client, ClientBuilder, MessagesApi, ResponsesApi};
 use wiremock::matchers::{bearer_token, method, path};
 use wiremock::{Mock, ResponseTemplate};
 
@@ -20,7 +21,7 @@ async fn responses_builder_sends_bearer_auth() {
         .await;
 
     let base_url = url::Url::parse(&server.uri()).unwrap();
-    let client = schelm_http::client::ClientBuilder::responses("resp-key", base_url)
+    let client = ClientBuilder::responses("resp-key", base_url)
         .build()
         .unwrap();
 
@@ -42,23 +43,18 @@ async fn responses_builder_sends_bearer_auth() {
 fn responses_constructor_returns_responses_builder() {
     let base_url = url::Url::parse("https://example.com/v1").unwrap();
     // This line asserts the return type at compile time.
-    let _builder: schelm_http::client::ClientBuilder<schelm_http::client::ResponsesApi> =
-        schelm_http::client::ClientBuilder::responses("key", base_url);
+    let _builder: ClientBuilder<ResponsesApi> = ClientBuilder::responses("key", base_url);
 }
 
 #[test]
 fn messages_constructor_returns_messages_builder() {
     let base_url = url::Url::parse("https://example.com/v1").unwrap();
     // This line asserts the return type at compile time.
-    let _builder: schelm_http::client::ClientBuilder<schelm_http::client::MessagesApi> =
-        schelm_http::client::ClientBuilder::messages("key", base_url);
+    let _builder: ClientBuilder<MessagesApi> = ClientBuilder::messages("key", base_url);
 }
 
 #[test]
 fn builder_preserves_marker_through_build() {
     let base_url = url::Url::parse("https://example.com/v1").unwrap();
-    let _client: schelm_http::client::Client<schelm_http::client::ResponsesApi> =
-        schelm_http::client::ClientBuilder::responses("key", base_url)
-            .build()
-            .unwrap();
+    let _client: Client<ResponsesApi> = ClientBuilder::responses("key", base_url).build().unwrap();
 }
