@@ -20,6 +20,8 @@ pub enum StopReason {
     ToolUse,
     PauseTurn,
     Refusal,
+    Compaction,
+    ModelContextWindowExceeded,
 }
 
 /// Service tier selection for create message requests.
@@ -39,6 +41,7 @@ pub enum UsageServiceTier {
     Batch,
 }
 
+/// Processing status of a message batch.
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum MessageBatchProcessingStatus {
@@ -47,6 +50,7 @@ pub enum MessageBatchProcessingStatus {
     Ended,
 }
 
+/// How the model should select which tool to use.
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum ToolChoiceType {
@@ -56,6 +60,7 @@ pub enum ToolChoiceType {
     None,
 }
 
+/// Cache control configuration for ephemeral caching.
 #[skip_serializing_none]
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct CacheControlEphemeral {
@@ -63,6 +68,7 @@ pub struct CacheControlEphemeral {
     pub ty: String,
 }
 
+/// A text content block used in system prompts.
 #[skip_serializing_none]
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct TextBlockParam {
@@ -73,6 +79,7 @@ pub struct TextBlockParam {
     pub cache_control: Option<CacheControlEphemeral>,
 }
 
+/// System prompt, either as a plain string or structured text blocks.
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 #[serde(untagged)]
 pub enum SystemPrompt {
@@ -92,6 +99,7 @@ pub struct ContentBlock {
     pub data: serde_json::Map<String, serde_json::Value>,
 }
 
+/// Message content, either as a plain string or a list of content blocks.
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 #[serde(untagged)]
 pub enum MessageContent {
@@ -99,12 +107,14 @@ pub enum MessageContent {
     Blocks(Vec<ContentBlock>),
 }
 
+/// A single input message turn with a role and content.
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct MessageParam {
     pub role: MessageRole,
     pub content: MessageContent,
 }
 
+/// Definition of a tool the model may call.
 #[skip_serializing_none]
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct ToolDefinition {
@@ -117,6 +127,7 @@ pub struct ToolDefinition {
     pub extra: HashMap<String, serde_json::Value>,
 }
 
+/// Specifies how the model should choose which tool to call.
 #[skip_serializing_none]
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct ToolChoice {
@@ -126,6 +137,7 @@ pub struct ToolChoice {
     pub disable_parallel_tool_use: Option<bool>,
 }
 
+/// Configuration for extended thinking.
 #[skip_serializing_none]
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct ThinkingConfig {
@@ -134,12 +146,14 @@ pub struct ThinkingConfig {
     pub budget_tokens: Option<u32>,
 }
 
+/// Configuration for the output format.
 #[skip_serializing_none]
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct OutputConfig {
     pub format: Option<serde_json::Value>,
 }
 
+/// Request body for the create message endpoint.
 #[skip_serializing_none]
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct CreateMessageBody {
@@ -147,7 +161,7 @@ pub struct CreateMessageBody {
     pub max_tokens: u32,
     pub messages: Vec<MessageParam>,
     pub cache_control: Option<CacheControlEphemeral>,
-    pub container: Option<String>,
+    pub container: Option<ContainerParam>,
     pub inference_geo: Option<String>,
     pub metadata: Option<HashMap<String, String>>,
     pub output_config: Option<OutputConfig>,
@@ -163,6 +177,17 @@ pub struct CreateMessageBody {
     pub top_p: Option<f32>,
 }
 
+/// Container parameter for create message requests, either a string ID or an object.
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
+#[serde(untagged)]
+pub enum ContainerParam {
+    /// A container ID string.
+    Id(String),
+    /// A container object with an ID and additional properties.
+    Object(Container),
+}
+
+/// A container object returned in responses or used in requests.
 #[skip_serializing_none]
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct Container {
@@ -171,6 +196,7 @@ pub struct Container {
     pub extra: HashMap<String, serde_json::Value>,
 }
 
+/// Token counts for cache creation by TTL tier.
 #[skip_serializing_none]
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct CacheCreation {
@@ -178,6 +204,7 @@ pub struct CacheCreation {
     pub ephemeral_1h_input_tokens: Option<u64>,
 }
 
+/// Usage information for server-side tool invocations.
 #[skip_serializing_none]
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct ServerToolUsage {
@@ -186,6 +213,7 @@ pub struct ServerToolUsage {
     pub extra: HashMap<String, serde_json::Value>,
 }
 
+/// Token usage statistics for a message.
 #[skip_serializing_none]
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct Usage {
@@ -199,6 +227,7 @@ pub struct Usage {
     pub service_tier: Option<UsageServiceTier>,
 }
 
+/// A complete message response from the Messages API.
 #[skip_serializing_none]
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct Message {
@@ -214,6 +243,7 @@ pub struct Message {
     pub container: Option<Container>,
 }
 
+/// Delta payload in a `message_delta` streaming event.
 #[skip_serializing_none]
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct MessageDelta {
@@ -222,6 +252,7 @@ pub struct MessageDelta {
     pub container: Option<Container>,
 }
 
+/// Usage statistics included in a `message_delta` streaming event.
 #[skip_serializing_none]
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct MessageDeltaUsage {
@@ -232,6 +263,7 @@ pub struct MessageDeltaUsage {
     pub server_tool_use: Option<ServerToolUsage>,
 }
 
+/// Detailed error information within an error response.
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct ErrorInfo {
     #[serde(rename = "type")]
@@ -239,6 +271,7 @@ pub struct ErrorInfo {
     pub message: String,
 }
 
+/// Top-level error response returned by the API.
 #[skip_serializing_none]
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct ErrorResponse {
@@ -406,6 +439,7 @@ fn is_known_event_type(ty: &str) -> bool {
     )
 }
 
+/// A streaming event with an unrecognized type, preserved for forward compatibility.
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct UnknownEvent {
     #[serde(rename = "type")]
@@ -414,6 +448,7 @@ pub struct UnknownEvent {
     pub payload: serde_json::Map<String, serde_json::Value>,
 }
 
+/// Counts of requests in each terminal state within a message batch.
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct MessageBatchRequestCounts {
     pub canceled: u64,
@@ -423,6 +458,7 @@ pub struct MessageBatchRequestCounts {
     pub succeeded: u64,
 }
 
+/// A message batch resource.
 #[skip_serializing_none]
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct MessageBatch {
@@ -439,17 +475,20 @@ pub struct MessageBatch {
     pub results_url: Option<String>,
 }
 
+/// A single request item within a message batch.
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct MessageBatchItem {
     pub custom_id: String,
     pub params: CreateMessageBody,
 }
 
+/// Request body for creating a message batch.
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct CreateMessageBatchBody {
     pub requests: Vec<MessageBatchItem>,
 }
 
+/// Query parameters for listing message batches.
 #[skip_serializing_none]
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct ListMessageBatchesQuery {
@@ -458,6 +497,7 @@ pub struct ListMessageBatchesQuery {
     pub limit: Option<u32>,
 }
 
+/// Paginated list of message batches.
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct MessageBatchList {
     pub data: Vec<MessageBatch>,
@@ -466,6 +506,7 @@ pub struct MessageBatchList {
     pub has_more: bool,
 }
 
+/// The result of an individual request within a message batch.
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum MessageBatchResult {
@@ -475,12 +516,14 @@ pub enum MessageBatchResult {
     Expired,
 }
 
+/// An individual response line from message batch results.
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct MessageBatchIndividualResponse {
     pub custom_id: String,
     pub result: MessageBatchResult,
 }
 
+/// Confirmation response after deleting a message batch.
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct DeletedMessageBatch {
     pub id: String,
@@ -488,6 +531,7 @@ pub struct DeletedMessageBatch {
     pub ty: String,
 }
 
+/// Request body for the count tokens endpoint.
 #[skip_serializing_none]
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct CountTokensBody {
@@ -501,6 +545,7 @@ pub struct CountTokensBody {
     pub tools: Option<Vec<ToolDefinition>>,
 }
 
+/// Response from the count tokens endpoint.
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct MessageTokensCount {
     pub input_tokens: u64,
