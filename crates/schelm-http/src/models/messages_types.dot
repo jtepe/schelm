@@ -1,0 +1,684 @@
+// Type Relationship Diagram for schelm-http Messages API models
+// Generate SVG: dot -Tsvg messages_types.dot -o messages_types.svg
+// If rendering is slow, change splines=ortho to splines=true
+
+digraph MessagesTypeRelationships {
+    graph [
+        rankdir=TB
+        fontname="Helvetica"
+        bgcolor="white"
+        pad="0.5"
+        nodesep=0.7
+        ranksep=1.0
+        newrank=true
+        splines=ortho
+    ];
+
+    node [
+        shape=none
+        fontname="Helvetica"
+        margin="0"
+    ];
+
+    edge [
+        fontname="Helvetica"
+        fontsize=9
+        color="#475569"
+        arrowsize=0.7
+    ];
+
+    // ================================================================
+    //  MAIN API TYPES (Red headers)
+    // ================================================================
+
+    CreateMessageBody [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#DC2626" CELLPADDING="8" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="12"><B>CreateMessageBody</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="6" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+model : String<BR ALIGN="LEFT"/>
+max_tokens : u32<BR ALIGN="LEFT"/>
+messages : [MessageParam]<BR ALIGN="LEFT"/>
+cache_control : CacheControlEphemeral?<BR ALIGN="LEFT"/>
+container : ContainerParam?<BR ALIGN="LEFT"/>
+inference_geo : String?<BR ALIGN="LEFT"/>
+metadata : Map&lt;String, String&gt;?<BR ALIGN="LEFT"/>
+output_config : OutputConfig?<BR ALIGN="LEFT"/>
+service_tier : RequestServiceTier?<BR ALIGN="LEFT"/>
+stop_sequences : [String]?<BR ALIGN="LEFT"/>
+stream : bool?<BR ALIGN="LEFT"/>
+system : SystemPrompt?<BR ALIGN="LEFT"/>
+temperature : f32?<BR ALIGN="LEFT"/>
+thinking : ThinkingConfig?<BR ALIGN="LEFT"/>
+tool_choice : ToolChoice?<BR ALIGN="LEFT"/>
+tools : [ToolDefinition]?<BR ALIGN="LEFT"/>
+top_k : u32?<BR ALIGN="LEFT"/>
+top_p : f32?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    Message [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#DC2626" CELLPADDING="8" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="12"><B>Message</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="6" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+id : String<BR ALIGN="LEFT"/>
+ty : String<BR ALIGN="LEFT"/>
+role : String<BR ALIGN="LEFT"/>
+content : [ContentBlock]<BR ALIGN="LEFT"/>
+model : String<BR ALIGN="LEFT"/>
+stop_reason : StopReason?<BR ALIGN="LEFT"/>
+stop_sequence : String?<BR ALIGN="LEFT"/>
+usage : Usage<BR ALIGN="LEFT"/>
+container : Container?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    // ================================================================
+    //  SIMPLE VALUE ENUMS (Purple headers)
+    // ================================================================
+
+    MessageRole [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#7C3AED" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>MessageRole</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+User<BR ALIGN="LEFT"/>
+Assistant<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    StopReason [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#7C3AED" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>StopReason</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+EndTurn<BR ALIGN="LEFT"/>
+MaxTokens<BR ALIGN="LEFT"/>
+StopSequence<BR ALIGN="LEFT"/>
+ToolUse<BR ALIGN="LEFT"/>
+PauseTurn<BR ALIGN="LEFT"/>
+Refusal<BR ALIGN="LEFT"/>
+Compaction<BR ALIGN="LEFT"/>
+ModelContextWindowExceeded<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    RequestServiceTier [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#7C3AED" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>RequestServiceTier</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+Auto<BR ALIGN="LEFT"/>
+StandardOnly<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    UsageServiceTier [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#7C3AED" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>UsageServiceTier</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+Standard<BR ALIGN="LEFT"/>
+Priority<BR ALIGN="LEFT"/>
+Batch<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    ToolChoiceType [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#7C3AED" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>ToolChoiceType</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+Auto<BR ALIGN="LEFT"/>
+Any<BR ALIGN="LEFT"/>
+Tool<BR ALIGN="LEFT"/>
+None<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    MessageBatchProcessingStatus [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#7C3AED" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>MessageBatchProcessingStatus</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+InProgress<BR ALIGN="LEFT"/>
+Canceling<BR ALIGN="LEFT"/>
+Ended<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    // ================================================================
+    //  COMPLEX / TAGGED ENUMS (Green headers)
+    // ================================================================
+
+    SystemPrompt [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#059669" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>SystemPrompt</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+String(String)<BR ALIGN="LEFT"/>
+Blocks([TextBlockParam])<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    MessageContent [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#059669" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>MessageContent</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+String(String)<BR ALIGN="LEFT"/>
+Blocks([ContentBlock])<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    ContainerParam [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#059669" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>ContainerParam</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+Id(String)<BR ALIGN="LEFT"/>
+Object(Container)<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    MessageBatchResult [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#059669" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>MessageBatchResult</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+Succeeded { message }<BR ALIGN="LEFT"/>
+Errored { error }<BR ALIGN="LEFT"/>
+Canceled<BR ALIGN="LEFT"/>
+Expired<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    // ================================================================
+    //  STREAMING TYPES (Cyan headers)
+    // ================================================================
+
+    StreamingEvent [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#0891B2" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>StreamingEvent</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+MessageStart { message }<BR ALIGN="LEFT"/>
+MessageDelta { delta, usage }<BR ALIGN="LEFT"/>
+MessageStop<BR ALIGN="LEFT"/>
+ContentBlockStart { index, content_block }<BR ALIGN="LEFT"/>
+ContentBlockDelta { index, delta }<BR ALIGN="LEFT"/>
+ContentBlockStop { index }<BR ALIGN="LEFT"/>
+Ping<BR ALIGN="LEFT"/>
+Error { error }<BR ALIGN="LEFT"/>
+Unknown(UnknownEvent)<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    // ================================================================
+    //  STRUCTS (Blue headers)
+    // ================================================================
+
+    // --- Request Input Types ---
+
+    MessageParam [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>MessageParam</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+role : MessageRole<BR ALIGN="LEFT"/>
+content : MessageContent<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    TextBlockParam [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>TextBlockParam</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+ty : String<BR ALIGN="LEFT"/>
+text : String<BR ALIGN="LEFT"/>
+citations : [Value]?<BR ALIGN="LEFT"/>
+cache_control : CacheControlEphemeral?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    ContentBlock [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>ContentBlock</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+ty : String<BR ALIGN="LEFT"/>
+data : Map&lt;String, Value&gt;<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    CacheControlEphemeral [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>CacheControlEphemeral</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+ty : String<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    // --- Request Config Types ---
+
+    ToolDefinition [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>ToolDefinition</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+name : String<BR ALIGN="LEFT"/>
+description : String?<BR ALIGN="LEFT"/>
+input_schema : Value?<BR ALIGN="LEFT"/>
+ty : String?<BR ALIGN="LEFT"/>
+extra : Map&lt;String, Value&gt;<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    ToolChoice [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>ToolChoice</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+ty : ToolChoiceType<BR ALIGN="LEFT"/>
+name : String?<BR ALIGN="LEFT"/>
+disable_parallel_tool_use : bool?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    ThinkingConfig [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>ThinkingConfig</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+ty : String<BR ALIGN="LEFT"/>
+budget_tokens : u32?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    OutputConfig [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>OutputConfig</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+format : Value?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    Container [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>Container</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+id : String?<BR ALIGN="LEFT"/>
+extra : Map&lt;String, Value&gt;<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    // --- Response Types ---
+
+    Usage [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>Usage</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+input_tokens : u64<BR ALIGN="LEFT"/>
+output_tokens : u64<BR ALIGN="LEFT"/>
+cache_creation : CacheCreation?<BR ALIGN="LEFT"/>
+cache_creation_input_tokens : u64?<BR ALIGN="LEFT"/>
+cache_read_input_tokens : u64?<BR ALIGN="LEFT"/>
+inference_geo : String?<BR ALIGN="LEFT"/>
+server_tool_use : ServerToolUsage?<BR ALIGN="LEFT"/>
+service_tier : UsageServiceTier?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    CacheCreation [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>CacheCreation</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+ephemeral_5m_input_tokens : u64?<BR ALIGN="LEFT"/>
+ephemeral_1h_input_tokens : u64?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    ServerToolUsage [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>ServerToolUsage</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+web_search_requests : u64?<BR ALIGN="LEFT"/>
+extra : Map&lt;String, Value&gt;<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    // --- Streaming Types ---
+
+    MessageDelta [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#0891B2" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>MessageDelta</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+stop_reason : StopReason?<BR ALIGN="LEFT"/>
+stop_sequence : String?<BR ALIGN="LEFT"/>
+container : Container?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    MessageDeltaUsage [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#0891B2" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>MessageDeltaUsage</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+output_tokens : u64<BR ALIGN="LEFT"/>
+input_tokens : u64?<BR ALIGN="LEFT"/>
+cache_creation_input_tokens : u64?<BR ALIGN="LEFT"/>
+cache_read_input_tokens : u64?<BR ALIGN="LEFT"/>
+server_tool_use : ServerToolUsage?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    UnknownEvent [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#0891B2" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>UnknownEvent</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+event_type : String<BR ALIGN="LEFT"/>
+payload : Map&lt;String, Value&gt;<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    // --- Error Types ---
+
+    ErrorInfo [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>ErrorInfo</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+ty : String<BR ALIGN="LEFT"/>
+message : String<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    ErrorResponse [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>ErrorResponse</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+ty : String<BR ALIGN="LEFT"/>
+error : ErrorInfo<BR ALIGN="LEFT"/>
+request_id : String?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    // --- Batch Types ---
+
+    MessageBatch [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>MessageBatch</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+id : String<BR ALIGN="LEFT"/>
+ty : String<BR ALIGN="LEFT"/>
+created_at : String<BR ALIGN="LEFT"/>
+expires_at : String<BR ALIGN="LEFT"/>
+processing_status : MessageBatchProcessingStatus<BR ALIGN="LEFT"/>
+request_counts : MessageBatchRequestCounts<BR ALIGN="LEFT"/>
+archived_at : String?<BR ALIGN="LEFT"/>
+cancel_initiated_at : String?<BR ALIGN="LEFT"/>
+ended_at : String?<BR ALIGN="LEFT"/>
+results_url : String?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    MessageBatchRequestCounts [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>MessageBatchRequestCounts</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+canceled : u64<BR ALIGN="LEFT"/>
+errored : u64<BR ALIGN="LEFT"/>
+expired : u64<BR ALIGN="LEFT"/>
+processing : u64<BR ALIGN="LEFT"/>
+succeeded : u64<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    MessageBatchItem [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>MessageBatchItem</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+custom_id : String<BR ALIGN="LEFT"/>
+params : CreateMessageBody<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    CreateMessageBatchBody [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#DC2626" CELLPADDING="8" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="12"><B>CreateMessageBatchBody</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="6" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+requests : [MessageBatchItem]<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    ListMessageBatchesQuery [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>ListMessageBatchesQuery</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+before_id : String?<BR ALIGN="LEFT"/>
+after_id : String?<BR ALIGN="LEFT"/>
+limit : u32?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    MessageBatchList [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>MessageBatchList</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+data : [MessageBatch]<BR ALIGN="LEFT"/>
+first_id : String?<BR ALIGN="LEFT"/>
+last_id : String?<BR ALIGN="LEFT"/>
+has_more : bool<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    MessageBatchIndividualResponse [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>MessageBatchIndividualResponse</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+custom_id : String<BR ALIGN="LEFT"/>
+result : MessageBatchResult<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    DeletedMessageBatch [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>DeletedMessageBatch</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+id : String<BR ALIGN="LEFT"/>
+ty : String<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    // --- Token Counting ---
+
+    CountTokensBody [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#DC2626" CELLPADDING="8" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="12"><B>CountTokensBody</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="6" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+model : String<BR ALIGN="LEFT"/>
+messages : [MessageParam]<BR ALIGN="LEFT"/>
+cache_control : CacheControlEphemeral?<BR ALIGN="LEFT"/>
+output_config : OutputConfig?<BR ALIGN="LEFT"/>
+system : SystemPrompt?<BR ALIGN="LEFT"/>
+thinking : ThinkingConfig?<BR ALIGN="LEFT"/>
+tool_choice : ToolChoice?<BR ALIGN="LEFT"/>
+tools : [ToolDefinition]?<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    MessageTokensCount [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#D1D5DB">
+<TR><TD BGCOLOR="#2563EB" CELLPADDING="6" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>MessageTokensCount</B></FONT></TD></TR>
+<TR><TD BGCOLOR="white" CELLPADDING="4" ALIGN="LEFT" BALIGN="LEFT"><FONT FACE="Consolas,monospace" POINT-SIZE="9" COLOR="#4B5563">
+input_tokens : u64<BR ALIGN="LEFT"/>
+</FONT></TD></TR>
+</TABLE>>];
+
+    // ================================================================
+    //  EDGES: CreateMessageBody field references
+    // ================================================================
+
+    CreateMessageBody -> MessageParam [weight=5];
+    CreateMessageBody -> CacheControlEphemeral;
+    CreateMessageBody -> ContainerParam;
+    CreateMessageBody -> OutputConfig;
+    CreateMessageBody -> RequestServiceTier [style=dashed, color="#94A3B8"];
+    CreateMessageBody -> SystemPrompt [weight=3];
+    CreateMessageBody -> ThinkingConfig;
+    CreateMessageBody -> ToolChoice;
+    CreateMessageBody -> ToolDefinition;
+
+    // ================================================================
+    //  EDGES: Input message hierarchy
+    // ================================================================
+
+    MessageParam -> MessageRole [style=dashed, color="#94A3B8"];
+    MessageParam -> MessageContent [weight=5];
+
+    MessageContent -> ContentBlock [weight=5];
+
+    // ================================================================
+    //  EDGES: System prompt
+    // ================================================================
+
+    SystemPrompt -> TextBlockParam [weight=5];
+    TextBlockParam -> CacheControlEphemeral [constraint=false];
+
+    // ================================================================
+    //  EDGES: Container
+    // ================================================================
+
+    ContainerParam -> Container [weight=5];
+
+    // ================================================================
+    //  EDGES: Tool config
+    // ================================================================
+
+    ToolChoice -> ToolChoiceType [style=dashed, color="#94A3B8", weight=5];
+
+    // ================================================================
+    //  EDGES: Message (Response) field references
+    // ================================================================
+
+    Message -> ContentBlock [weight=3];
+    Message -> StopReason [style=dashed, color="#94A3B8"];
+    Message -> Usage [weight=5];
+    Message -> Container;
+
+    // ================================================================
+    //  EDGES: Usage hierarchy
+    // ================================================================
+
+    Usage -> CacheCreation [weight=5];
+    Usage -> ServerToolUsage [weight=5];
+    Usage -> UsageServiceTier [style=dashed, color="#94A3B8"];
+
+    // ================================================================
+    //  EDGES: Streaming
+    // ================================================================
+
+    StreamingEvent -> Message [style=dashed, color="#0891B2", constraint=false];
+    StreamingEvent -> MessageDelta [weight=5, color="#0891B2"];
+    StreamingEvent -> MessageDeltaUsage [weight=5, color="#0891B2"];
+    StreamingEvent -> ContentBlock [style=dashed, color="#0891B2", constraint=false];
+    StreamingEvent -> ErrorInfo [color="#0891B2"];
+    StreamingEvent -> UnknownEvent [weight=5, color="#0891B2"];
+
+    MessageDelta -> StopReason [style=dashed, color="#94A3B8", constraint=false];
+    MessageDelta -> Container [constraint=false];
+
+    MessageDeltaUsage -> ServerToolUsage [constraint=false];
+
+    // ================================================================
+    //  EDGES: Error types
+    // ================================================================
+
+    ErrorResponse -> ErrorInfo [weight=5];
+
+    // ================================================================
+    //  EDGES: Batch types
+    // ================================================================
+
+    CreateMessageBatchBody -> MessageBatchItem [weight=5];
+    MessageBatchItem -> CreateMessageBody [weight=3];
+
+    MessageBatch -> MessageBatchProcessingStatus [style=dashed, color="#94A3B8"];
+    MessageBatch -> MessageBatchRequestCounts [weight=5];
+
+    MessageBatchList -> MessageBatch [weight=5];
+
+    MessageBatchIndividualResponse -> MessageBatchResult [weight=5];
+    MessageBatchResult -> Message [style=dashed, color="#059669", constraint=false];
+    MessageBatchResult -> ErrorResponse [weight=3];
+
+    // ================================================================
+    //  EDGES: Count tokens
+    // ================================================================
+
+    CountTokensBody -> MessageParam [constraint=false];
+    CountTokensBody -> CacheControlEphemeral [constraint=false];
+    CountTokensBody -> OutputConfig [constraint=false];
+    CountTokensBody -> SystemPrompt [constraint=false];
+    CountTokensBody -> ThinkingConfig [constraint=false];
+    CountTokensBody -> ToolChoice [constraint=false];
+    CountTokensBody -> ToolDefinition [constraint=false];
+
+    // ================================================================
+    //  LAYOUT CONSTRAINTS
+    // ================================================================
+
+    // Top-level API types side by side
+    {rank=same; CreateMessageBody; Message;}
+
+    // Request config types on same level
+    {rank=same; ThinkingConfig; OutputConfig; ToolChoice; ToolDefinition; SystemPrompt; ContainerParam;}
+
+    // Input message types
+    {rank=same; MessageParam; Usage;}
+
+    // Content and detail types
+    {rank=same; MessageContent; ContentBlock; CacheCreation; ServerToolUsage;}
+
+    // Simple value enums grouped together
+    {rank=same; MessageRole; StopReason; RequestServiceTier; UsageServiceTier; ToolChoiceType;}
+
+    // Container and text block
+    {rank=same; Container; TextBlockParam; CacheControlEphemeral;}
+
+    // Streaming types grouped
+    {rank=same; StreamingEvent; MessageDelta; MessageDeltaUsage; UnknownEvent;}
+
+    // Error types
+    {rank=same; ErrorInfo; ErrorResponse;}
+
+    // Batch types grouped
+    {rank=same; CreateMessageBatchBody; MessageBatch; MessageBatchList;}
+    {rank=same; MessageBatchItem; MessageBatchRequestCounts; MessageBatchIndividualResponse;}
+    {rank=same; MessageBatchResult; MessageBatchProcessingStatus; DeletedMessageBatch; ListMessageBatchesQuery;}
+
+    // Count tokens
+    {rank=same; CountTokensBody; MessageTokensCount;}
+
+    // ================================================================
+    //  LEGEND (single compact node, anchored to the left)
+    // ================================================================
+
+    legend [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#9CA3AF" BGCOLOR="#F9FAFB" CELLPADDING="2">
+<TR><TD COLSPAN="2" CELLPADDING="6" ALIGN="LEFT"><FONT POINT-SIZE="13" COLOR="#1F2937"><B>Legend</B></FONT></TD></TR>
+<HR/>
+<TR>
+  <TD BGCOLOR="#DC2626" WIDTH="18" HEIGHT="12" CELLPADDING="3"><FONT POINT-SIZE="4"> </FONT></TD>
+  <TD ALIGN="LEFT" CELLPADDING="4"><FONT POINT-SIZE="9" COLOR="#4B5563">API Entry Point</FONT></TD>
+</TR>
+<TR>
+  <TD BGCOLOR="#2563EB" WIDTH="18" HEIGHT="12" CELLPADDING="3"><FONT POINT-SIZE="4"> </FONT></TD>
+  <TD ALIGN="LEFT" CELLPADDING="4"><FONT POINT-SIZE="9" COLOR="#4B5563">Struct</FONT></TD>
+</TR>
+<TR>
+  <TD BGCOLOR="#7C3AED" WIDTH="18" HEIGHT="12" CELLPADDING="3"><FONT POINT-SIZE="4"> </FONT></TD>
+  <TD ALIGN="LEFT" CELLPADDING="4"><FONT POINT-SIZE="9" COLOR="#4B5563">Value Enum</FONT></TD>
+</TR>
+<TR>
+  <TD BGCOLOR="#059669" WIDTH="18" HEIGHT="12" CELLPADDING="3"><FONT POINT-SIZE="4"> </FONT></TD>
+  <TD ALIGN="LEFT" CELLPADDING="4"><FONT POINT-SIZE="9" COLOR="#4B5563">Tagged / Sum Enum</FONT></TD>
+</TR>
+<TR>
+  <TD BGCOLOR="#0891B2" WIDTH="18" HEIGHT="12" CELLPADDING="3"><FONT POINT-SIZE="4"> </FONT></TD>
+  <TD ALIGN="LEFT" CELLPADDING="4"><FONT POINT-SIZE="9" COLOR="#4B5563">Streaming</FONT></TD>
+</TR>
+<HR/>
+<TR>
+  <TD COLSPAN="2" CELLPADDING="4" ALIGN="LEFT"><FONT POINT-SIZE="9" COLOR="#4B5563">&#x2500;&#x2500;&#x25B6;  contains / wraps type</FONT></TD>
+</TR>
+<TR>
+  <TD COLSPAN="2" CELLPADDING="4" ALIGN="LEFT"><FONT POINT-SIZE="9" COLOR="#94A3B8">- - &#x25B6;  references enum value</FONT></TD>
+</TR>
+</TABLE>>];
+
+    // Anchor legend to the top-left alongside the main API types
+    {rank=same; legend; CreateMessageBody; Message;}
+    legend -> CreateMessageBody [style=invis];
+}
